@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/language/english.dart';
+import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/widget/add_address.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:group_button/group_button.dart';
 
@@ -20,33 +22,105 @@ class _CartState extends State<Cart> {
       body: Stack(
         children: <Widget>[
           Scaffold(
-              extendBodyBehindAppBar: true,
-              backgroundColor: Colors.black,
-              appBar: appbar(context),
-              body: Column(
+            extendBodyBehindAppBar: true,
+            backgroundColor: Colors.black,
+            appBar: appbar(context),
+            body: Column(
+              children: [
+                const SizedBox(
+                  height: 60,
+                ),
+                Text(
+                  cartTitle,
+                  style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white)),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(child: listDetail(context)),
+              ],
+            ),
+            bottomNavigationBar: Container(
+              height: 70,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white12,
+              child: Row(
                 children: [
-                  const SizedBox(
-                    height: 60,
+                  Flexible(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Radio(
+                            value: null,
+                            groupValue: null,
+                            onChanged: (Null? value) {}),
+                        Text(
+                          selectAll,
+                          style: GoogleFonts.poppins(
+                              textStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
+                        ),
+                      ],
+                    ),
                   ),
-                  Text(
-                    cartTitle,
-                    style: GoogleFonts.poppins(
-                        textStyle: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white)),
-                    textAlign: TextAlign.center,
+                  Flexible(
+                    flex: 2, 
+                    child: Row(
+                      children: [
+                        Flexible(
+                          flex: 3,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.black38,
+                            child: Center(
+                              child: Text(
+                                edit,
+                                style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white)),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // const SizedBox(width: 5,),
+                          Flexible(
+                            flex: 7,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.white30,
+                              child: Center(
+                                child: Text(
+                                  submission,
+                                  style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white)),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ),
+                          ),
+                        
+                      ],
+                    ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                 
-                    child: listDetail(context)),
-                 
-                  
                 ],
-              ))
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -72,8 +146,7 @@ class _CartState extends State<Cart> {
               cartList(context),
               cartList(context),
               cartList(context),
-              cartList(context),
-              
+
               // Row(
               //   children: [
               //     Text(
@@ -105,27 +178,32 @@ class _CartState extends State<Cart> {
               SizedBox(
                 height: 40,
                 width: 310,
-                child: TextFormField(
-                  onTap: () {},
-                  style: const TextStyle(
-                    color: Colors.white,
+                child:TextFormField(
+                    readOnly: true,
+                    onTap: () {
+                        Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AddAdress()));
+                    },
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.pin_drop,
+                          color: Colors.white54,
+                        ),
+                        contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        fillColor: Colors.white12,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(Radius.circular(15))),
+                        hintText: deliveryTo,
+                        hintStyle: TextStyle(
+                          color: Colors.white54,
+                        )),
                   ),
-                  decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.pin_drop,
-                        color: Colors.white54,
-                      ),
-                      contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      fillColor: Colors.white12,
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      hintText: deliveryTo,
-                      hintStyle: TextStyle(
-                        color: Colors.white54,
-                      )),
-                ),
+          
               ),
               const SizedBox(
                 height: 20,
@@ -163,7 +241,7 @@ class _CartState extends State<Cart> {
                       )),
                 ),
               ),
-               SizedBox(height: 300, width: 300, child: deliveryTimePicker)
+              SizedBox(height: 300, width: 300, child: deliveryTimePicker)
             ],
           ),
         )
@@ -181,9 +259,15 @@ class _CartState extends State<Cart> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Card(
-                child: Image.network(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF6o4ufTrFectM9_-EcLvFS6glUxq58HC6DA&usqp=CAU'),
+              Center(
+                child: Container(
+                    color: Colors.white12,
+                    height: 90,
+                    width: 100,
+                    child: Image.asset(
+                      "assets/giftdad.jpg",
+                      fit: BoxFit.cover,
+                    )),
               ),
               const SizedBox(width: 10),
               Flexible(
@@ -227,11 +311,11 @@ class _CartState extends State<Cart> {
             ),
           ]),
         ),
-        Checkbox(value: true, onChanged: (bool?value){
-          setState(() {
-            
-          });
-        })
+        Checkbox(
+            value: true,
+            onChanged: (bool? value) {
+              setState(() {});
+            })
       ],
     );
   }

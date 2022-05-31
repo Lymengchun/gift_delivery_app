@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/auth%20screen/enter_name.dart';
-import 'package:flutter_application_1/language/english.dart';
-import 'package:flutter_application_1/widget/homepage.dart';
+import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/widget/homepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UploadProfile extends StatefulWidget {

@@ -1,8 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/language/english.dart';
-import 'package:flutter_application_1/widget/product_detail.dart';
+import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/widget/cart.dart';
+import 'package:gift_delivery_app/widget/product_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Homepage extends StatefulWidget {
@@ -29,31 +28,14 @@ final tabs = [
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+
+
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: tabs.length);
   }
-  // static const TextStyle optionStyle =
-  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  // static const List<Widget> _widgetOptions = <Widget>[
-  //   Text(
-  //     'Index 0: Home',
-  //     style: optionStyle,
-  //   ),
-  //   Text(
-  //     'Index 1: List',
-  //     style: optionStyle,
-  //   ),
-  //   Text(
-  //     'Index 2: Notification',
-  //     style: optionStyle,
-  //   ),
-  //   Text(
-  //     'Index 3: Delivery',
-  //     style: optionStyle,
-  //   ),
-  // ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -63,39 +45,26 @@ class _HomepageState extends State<Homepage>
 
   @override
   Widget build(BuildContext context) {
+      final screens = [
+    homeScreen(context),
+    listScreen(),
+    notificationScreen(),
+    deliveryScreen()
+  ];
+
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: appbar,
+      appBar: appbar(context),
       body: Stack(
         children: [
           Container(
             color: Colors.black,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 18),
-                child: homeToptitle(),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              homeSearchBar,
-              Container(
-                  height: 50,
-                  width: 800,
-                  color: Colors.transparent,
-                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                  child: tabCategory),
-              Expanded(
-                  child: Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                child: tabCategoryView(context),
-              ))
-            ],
+          IndexedStack(
+            index: _selectedIndex,
+            children: screens,
           ),
+   
         ],
       ),
       drawer: drawer,
@@ -104,7 +73,136 @@ class _HomepageState extends State<Homepage>
   }
 }
 
-AppBar get appbar {
+Widget homeScreen(BuildContext context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 18),
+        child: homeToptitle(),
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      homeSearchBar,
+       InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, '/productDetail');
+        },
+          child: const Text(
+        "go to product detail",
+        style: TextStyle(color: Colors.white),
+      ))
+      // Container(
+      //     height: 50,
+      //     width: 800,
+      //     color: Colors.transparent,
+      //     margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //     child: tabCategory),
+      // Expanded(
+      //     child: Container(
+      //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //   child: tabCategoryView(context),
+      // ))
+    ],
+  );
+}
+
+Widget listScreen() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: const [
+      Padding(
+        padding: EdgeInsets.only(left: 18),
+        child: Text(
+          "listScreen",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      // homeSearchBar,
+      // Container(
+      //     height: 50,
+      //     width: 800,
+      //     color: Colors.transparent,
+      //     margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //     child: tabCategory),
+      // Expanded(
+      //     child: Container(
+      //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //   child: tabCategoryView(context),
+      // ))
+    ],
+  );
+}
+
+Widget notificationScreen() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: const [
+      Padding(
+        padding: EdgeInsets.only(left: 18),
+        child: Text(
+          "notificationScreen",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      // homeSearchBar,
+      // Container(
+      //     height: 50,
+      //     width: 800,
+      //     color: Colors.transparent,
+      //     margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //     child: tabCategory),
+      // Expanded(
+      //     child: Container(
+      //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //   child: tabCategoryView(context),
+      // ))
+    ],
+  );
+}
+
+Widget deliveryScreen() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: const [
+      Padding(
+        padding: EdgeInsets.only(left: 18),
+        child: Text(
+          "deliveryScreen",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      // homeSearchBar,
+      // Container(
+      //     height: 50,
+      //     width: 800,
+      //     color: Colors.transparent,
+      //     margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //     child: tabCategory),
+      // Expanded(
+      //     child: Container(
+      //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      //   child: tabCategoryView(context),
+      // ))
+    ],
+  );
+}
+
+AppBar appbar(context) {
   return AppBar(
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
@@ -116,7 +214,10 @@ AppBar get appbar {
           right: 20.0,
         ),
         child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Cart()));
+            },
             child: const Center(
                 child: Icon(
               Icons.shopping_cart_outlined,
@@ -229,12 +330,11 @@ TabBarView tabCategoryView(context) {
   return TabBarView(
     controller: _tabController,
     children: [
-       
       for (final tab in tabs)
         InkWell(
           onTap: () {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProductDetail()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProductDetail()));
           },
           child: Text(
             tab,

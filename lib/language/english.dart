@@ -44,3 +44,17 @@ const deliveryOn = "Delivery on";
 
 //cart
 const cartTitle = "Cart";
+const selectAll = "Select all";
+const edit = "Edit";
+const submission = "Submission";
+
+//add Address
+
+const addAdress ="Add Address";
+const address = "Address";
+
+//add more address
+
+const name = "Name";
+const phone = "Phone";
+const addReferent = "Add Referent";

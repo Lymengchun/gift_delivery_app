@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/auth%20screen/upload_profile.dart';
-import 'package:flutter_application_1/language/english.dart';
+import 'package:gift_delivery_app/auth%20screen/upload_profile.dart';
+import 'package:gift_delivery_app/language/english.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 class EnterName extends StatefulWidget {
   const EnterName({Key? key}) : super(key: key);

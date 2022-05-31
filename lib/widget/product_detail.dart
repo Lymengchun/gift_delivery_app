@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/language/english.dart';
-import 'package:flutter_application_1/widget/cart.dart';
+import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/widget/cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductDetail extends StatefulWidget {

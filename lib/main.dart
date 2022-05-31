@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/start_screen.dart';
+import 'package:gift_delivery_app/globalvar.dart';
+import 'package:gift_delivery_app/start_screen.dart';
+import 'package:gift_delivery_app/widget/homepage.dart';
+import 'package:gift_delivery_app/widget/product_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 
 
 // import 'auth screen/enter_phone.dart';
 
-void main() {
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -33,24 +38,40 @@ class MyApp extends StatelessWidget {
         ),
         primarySwatch: Colors.blue,
       ),
-      home: const Myapp(),
+      // home: const Myapp(),
+      initialRoute: '/',
+      routes: {
+        '/':(context) => const AppRouteManage(),
+
+        '/productDetail':(context) => const ProductDetail(),
+        '/homepage':(context) => const Homepage(),
+      },
     );
   }
 }
-class Myapp extends StatefulWidget {
-  const Myapp({ Key? key }) : super(key: key);
 
-  @override
-  State<Myapp> createState() => _MyappState();
-}
 
-class _MyappState extends State<Myapp> {
+// class Myapp extends StatefulWidget {
+//   const Myapp({ Key? key }) : super(key: key);
+
+//   @override
+//   State<Myapp> createState() => _MyappState();
+// }
+
+// class _MyappState extends State<Myapp> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return (userPhone == "")? const StartScreen():const Homepage();
+//   }
+// }
+
+
+class AppRouteManage extends StatelessWidget {
+  const AppRouteManage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.blue,
-      body: StartScreen(),
-    );
+    return (userPhone == "")? const StartScreen():const Homepage();
   }
 }
 

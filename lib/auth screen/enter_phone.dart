@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/auth%20screen/verify_phone.dart';
-import 'package:flutter_application_1/language/english.dart';
+import 'package:gift_delivery_app/auth%20screen/verify_phone.dart';
+import 'package:gift_delivery_app/language/english.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gift_delivery_app/globalvar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class EnterPhone extends StatefulWidget {
   const EnterPhone({Key? key}) : super(key: key);
@@ -10,7 +14,18 @@ class EnterPhone extends StatefulWidget {
   State<EnterPhone> createState() => _EnterPhoneState();
 }
 
+FirebaseAuth auth = FirebaseAuth.instance;
+
+TextEditingController phoneController = TextEditingController();
+
 class _EnterPhoneState extends State<EnterPhone> {
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,11 +42,11 @@ class _EnterPhoneState extends State<EnterPhone> {
                   height: 100,
                 ),
                 topTitle,
-                inputPhone,
+                inputPhone(phoneController),
                 const SizedBox(
                   height: 10,
                 ),
-                btBottom(context)
+                btBottom(context,phoneController)
               ],
             ),
           
@@ -71,7 +86,7 @@ Widget get topTitle {
   );
 }
 
-Widget get inputPhone {
+Widget inputPhone(phoneController) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 35),
     child: Row(
@@ -79,6 +94,8 @@ Widget get inputPhone {
         Flexible(
           flex: 1,
           child: TextFormField(
+            readOnly: true,
+            keyboardType: TextInputType.phone,
             style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
                 fillColor: Colors.white12,
@@ -96,6 +113,9 @@ Widget get inputPhone {
         Flexible(
           flex: 4,
           child: TextFormField(
+            // maxLength: 10,
+            keyboardType: TextInputType.phone,
+            controller: phoneController,
             style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
                 fillColor: Colors.white12,
@@ -112,7 +132,7 @@ Widget get inputPhone {
   );
 }
 
-Widget btBottom(context) {
+Widget btBottom(context,phoneController) {
   return Column(
     children: [
       SizedBox(
@@ -120,6 +140,8 @@ Widget btBottom(context) {
         height: 60,
         child: ElevatedButton(
             onPressed: () {
+              //  loginWithPhone();
+               userPhone = phoneController.text.toString();
               Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -158,3 +180,22 @@ Widget btBottom(context) {
     ],
   );
 }
+
+  void loginWithPhone() async {
+    auth.verifyPhoneNumber(
+      timeout: const Duration(seconds: 60),
+      phoneNumber: "+855" + phoneController.text,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential).then((value) {
+          print("You are logged in successfully");
+        });
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print(e.message);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        verificationID = verificationId;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
