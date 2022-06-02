@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gift_delivery_app/admin%20page&staff/add_item.dart';
+import 'package:gift_delivery_app/admin%20page&staff/list_item.dart';
+import 'package:gift_delivery_app/admin%20page&staff/manage_home.dart';
+import 'package:gift_delivery_app/admin%20page&staff/manage_product.dart';
 import 'package:gift_delivery_app/globalvar.dart';
-import 'package:gift_delivery_app/start_screen.dart';
 import 'package:gift_delivery_app/widget/homepage.dart';
 import 'package:gift_delivery_app/widget/product_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,6 +48,8 @@ class MyApp extends StatelessWidget {
 
         '/productDetail':(context) => const ProductDetail(),
         '/homepage':(context) => const Homepage(),
+        '/manageProduct':(context) => const ManageProduct(),
+        '/addItem':(context) => const ListItem()
       },
     );
   }
@@ -71,7 +76,7 @@ class AppRouteManage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (userPhone == "")? const StartScreen():const Homepage();
+    return (userPhone == "0964037982")? const ManageHome():const Homepage();
   }
 }
 

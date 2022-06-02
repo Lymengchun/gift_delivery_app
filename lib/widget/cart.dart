@@ -322,7 +322,7 @@ class _CartState extends State<Cart> {
 }
 
 Widget get deliveryTimePicker {
-  int _value = 1;
+
   return Column(
     children: [
       ListTile(

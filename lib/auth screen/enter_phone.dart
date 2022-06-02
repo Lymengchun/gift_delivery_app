@@ -3,7 +3,6 @@ import 'package:gift_delivery_app/auth%20screen/verify_phone.dart';
 import 'package:gift_delivery_app/language/english.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gift_delivery_app/globalvar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 

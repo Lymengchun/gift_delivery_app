@@ -11,7 +11,7 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  var _value = 1;
+
 
   @override
   void initState() {

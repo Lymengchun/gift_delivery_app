@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/widget/homepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -185,9 +186,9 @@ Widget btBottom(context) {
                          _optFive.text+
                          _optSix.text ;
               });
-              verifyOTP();
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => const EnterName()));
+              // verifyOTP();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Homepage()));
             },
             child: Text(
               btVerify,
