@@ -19,3 +19,6 @@ const addImage = "Add Image";
 const name = "Name";
 const done  = "Done";
 const listItem = "List Item";
+const soldAmount = "Sold Amount";
+const uploadeDate = "Upload Date";
+

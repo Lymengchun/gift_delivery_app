@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
+import 'package:gift_delivery_app/admin%20page&staff/add_product_controller.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -56,7 +58,8 @@ class _ManageHomeState extends State<ManageHome> {
                               },
                               child: btAdmin(dashboard,"2",Icons.dashboard_outlined)),
                             InkWell(
-                              onTap: () {
+                              onTap: ()async {
+                                // getProduct();
                                 Navigator.pushNamed(context, '/manageProduct');
                               },
                               child: btAdmin(product,"",Icons.warehouse_outlined)),
