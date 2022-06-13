@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gift_delivery_app/admin%20page&staff/add_item.dart';
 import 'package:gift_delivery_app/admin%20page&staff/list_item.dart';
 import 'package:gift_delivery_app/admin%20page&staff/manage_home.dart';
 import 'package:gift_delivery_app/admin%20page&staff/manage_product.dart';
 import 'package:gift_delivery_app/globalvar.dart';
+import 'package:gift_delivery_app/widget/about.dart';
+import 'package:gift_delivery_app/widget/deposit.dart';
+import 'package:gift_delivery_app/widget/home_product_list.dart';
 import 'package:gift_delivery_app/widget/homepage.dart';
 import 'package:gift_delivery_app/widget/product_detail.dart';
+import 'package:gift_delivery_app/widget/setting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -27,15 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gift Delevery',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
+     
         textTheme: GoogleFonts.latoTextTheme(
           Theme.of(context).textTheme
         ),
@@ -49,7 +44,11 @@ class MyApp extends StatelessWidget {
         '/productDetail':(context) => const ProductDetail(),
         '/homepage':(context) => const Homepage(),
         '/manageProduct':(context) => const ManageProduct(),
-        '/addItem':(context) => const ListItem()
+        '/addItem':(context) => const ListItem(),
+        '/setting':((context) => const Setting()),
+        '/about':(context) => const About(),
+        '/deposit':(context) => const Deposit(),
+        '/homeProductList':(context) => const HomeProductList()
       },
     );
   }

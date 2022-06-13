@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
 import 'package:gift_delivery_app/admin%20page&staff/add_item.dart';
 import 'package:gift_delivery_app/admin%20page&staff/add_product_controller.dart';
-import 'package:gift_delivery_app/admin%20page&staff/manage_product.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,7 +25,6 @@ class _AddProductState extends State<AddProduct> {
   final catagroiesList = [
     'Cakes',
     'Flowers',
-    'Personalized',
     'Fashion andd Lifestyle Gifts',
     'Jewellery',
     'Toys & Games'

@@ -35,6 +35,12 @@ const btUploadProfileContinue = "Continue";
 const homeTopTitle1 = "Beautiful";
 const homeTopTitle2 = "gift for your love";
 const homeSearch = "Search";
+const balance = 'Balance';
+const deposit = 'Deposit';
+const setting = 'Setting';
+const logout = 'Logout';
+const about = 'About';
+const bestSell = 'Best Sell';
 
 //Product Detail and cart
 const productName = "Lorem ipsum dolor sit amet consectetur.";
@@ -58,3 +64,7 @@ const address = "Address";
 const name = "Name";
 const phone = "Phone";
 const addReferent = "Add Referent";
+
+//setting 
+const language = 'Language';
+
