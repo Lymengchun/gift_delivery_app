@@ -19,7 +19,7 @@ class _HomeProductListState extends State<HomeProductList> {
   final _catagroiesList = [
     'Cakes',
     'Flowers',
-    'Fashion andd Lifestyle Gifts',
+    'Fashion and Lifestyle Gifts',
     'Jewellery',
     'Toys & Games',
     'All'
@@ -38,11 +38,19 @@ class _HomeProductListState extends State<HomeProductList> {
       //  selectedIndex = widget.chipIndex;
       _getAllProduct();
     } else if (selectedIndex == 4) {
+      _fetchToysnGamesCatagories();
     } else if (selectedIndex == 3) {
+      _fetchJewelleryCatagories();
     } else if (selectedIndex == 2) {
+      _fetchFashionandLifestyleGiftsCatagories();
     } else if (selectedIndex == 1) {
-    } else {}
+      _fetchFlowersCatagories();
+    } else {
+      _fetchCakesCatagories();
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -175,6 +183,63 @@ class _HomeProductListState extends State<HomeProductList> {
     }
   }
 
+
+  void _fetchCakesCatagories() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchCakesCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProduct = productModelFromJson(res.body);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+    void _fetchFlowersCatagories() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchFlowersCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProduct = productModelFromJson(res.body);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+     void _fetchFashionandLifestyleGiftsCatagories() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchFashionandLifestyleGiftsCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProduct = productModelFromJson(res.body);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+      void _fetchJewelleryCatagories() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchJewelleryCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProduct = productModelFromJson(res.body);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+        void _fetchToysnGamesCatagories() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchToysnGamesCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProduct = productModelFromJson(res.body);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+
+
   Widget createChoiceChip(int index, String label, Color color) {
     return InputChip(
         selected: selectedIndex == index,
@@ -187,23 +252,23 @@ class _HomeProductListState extends State<HomeProductList> {
             _getAllProduct();
           } else if (selectedIndex == 4) {
             setState(() {
-              _allProduct = [];
+              _fetchToysnGamesCatagories();
             });
           } else if (selectedIndex == 3) {
             setState(() {
-              _allProduct = [];
+              _fetchJewelleryCatagories();
             });
           } else if (selectedIndex == 2) {
             setState(() {
-              _allProduct = [];
+              _fetchFashionandLifestyleGiftsCatagories();
             });
           } else if (selectedIndex == 1) {
             setState(() {
-              _allProduct = [];
+              _fetchFlowersCatagories();
             });
           } else {
             setState(() {
-              _allProduct = [];
+              _fetchCakesCatagories();
             });
           }
         },

@@ -125,9 +125,11 @@ class _AddItemState extends State<AddItem> {
               height: 10,
             ),
             TextFormField(
+              keyboardType: TextInputType.number,
               controller: itemPriceController,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
+
                   fillColor: Colors.white12,
                   filled: true,
                   border: OutlineInputBorder(
@@ -244,7 +246,7 @@ class _AddItemState extends State<AddItem> {
     }
 
     Item itemModel = Item(
-        price:int.parse(itemPriceController.text),
+        price:double.parse(itemPriceController.text),
         itemImage: itemImageController.text,
         name: itemNameController.text);
     listItemsController.add(itemModel);

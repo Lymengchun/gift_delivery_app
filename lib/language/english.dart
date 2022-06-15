@@ -41,6 +41,7 @@ const setting = 'Setting';
 const logout = 'Logout';
 const about = 'About';
 const bestSell = 'Best Sell';
+const newArrival = 'New Arrival';
 
 //Product Detail and cart
 const productName = "Lorem ipsum dolor sit amet consectetur.";

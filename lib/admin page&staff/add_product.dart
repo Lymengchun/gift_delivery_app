@@ -123,6 +123,7 @@ class _AddProductState extends State<AddProduct> {
               height: 10,
             ),
             TextFormField(
+              keyboardType: TextInputType.number,
               controller: productAmountController,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(

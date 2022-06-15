@@ -27,6 +27,9 @@ class _ManageProductState extends State<ManageProduct> {
         allProduct = productModelFromJson(res.body);
       });
       // print(res.body);
+        //  print(allProduct);
+    
+        // print(allProduct[0].item[0].price);
     } else {
       throw Exception('Failed to load Product data.');
     }
@@ -37,6 +40,7 @@ class _ManageProductState extends State<ManageProduct> {
     // TODO: implement initState
     super.initState();
     getProduct();
+    
     addProduct = AddProduct(callback: callback);
   }
 
@@ -127,7 +131,7 @@ class _ManageProductState extends State<ManageProduct> {
                                                   top: 10),
                                               width: 250,
                                               child: Text(
-                                                '\$${allProduct[index].item[0].price.toString()}',
+                                                '\$${allProduct[index].item[0].price}',
                                                 textDirection:
                                                     TextDirection.ltr,
                                                 textAlign: TextAlign.end,

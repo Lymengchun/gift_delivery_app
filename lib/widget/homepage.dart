@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
 import 'package:gift_delivery_app/language/english.dart';
 import 'package:gift_delivery_app/widget/cart.dart';
 import 'package:gift_delivery_app/widget/home_product_list.dart';
-
+import 'package:gift_delivery_app/widget/product_detail.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 
 class Homepage extends StatefulWidget {
@@ -17,26 +19,54 @@ class Homepage extends StatefulWidget {
 final catagroiesList = [
   'Cakes',
   'Flowers',
-  'Fashion andd Lifestyle Gifts',
+  'Fashion and Lifestyle Gifts',
   'Jewellery',
   'Toys & Games',
   'All'
 ];
 String? catagoriesValue;
 int? indexChip;
-
+List<ProductModel> _fetchBestSell = [];
+List<ProductModel> _fetchNewArrival = [];
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  
   @override
   void initState() {
     super.initState();
+    fetchBestSell();
+     fetchNewArrival();
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+    void fetchBestSell() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchBestSell"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _fetchBestSell = productModelFromJson(res.body);
+      });
+    
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+    void fetchNewArrival() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchNewestProduct"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _fetchNewArrival = productModelFromJson(res.body);
+      });
+    
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
   }
 
   @override
@@ -346,11 +376,15 @@ class _HomepageState extends State<Homepage>
               height: 150,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 8,
+                  itemCount: _fetchBestSell.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/productDetail');
+                        Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProductDetail(
+                                              allProduct: _fetchBestSell[index])));
                       },
                       child: SizedBox(
                         width: 120,
@@ -362,7 +396,7 @@ class _HomepageState extends State<Homepage>
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
-                                    'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/cat.jpg',
+                                    _fetchBestSell[index].item[0].itemImage,
                                     fit: BoxFit.cover,
                                     width: 110,
                                     height: 110,
@@ -372,18 +406,18 @@ class _HomepageState extends State<Homepage>
                               padding: const EdgeInsets.only(left: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children:  [
                                   Text(
-                                    'ProductName',
+                                    _fetchBestSell[index].productName,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
                                   Text(
-                                    '\$10',
+                                    '\$${_fetchBestSell[index].item[0].price}',
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
@@ -403,7 +437,7 @@ class _HomepageState extends State<Homepage>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Newest Product',
+                newArrival,
                 style: GoogleFonts.poppins(
                     textStyle: const TextStyle(
                         fontSize: 20,
@@ -418,11 +452,15 @@ class _HomepageState extends State<Homepage>
               height: 150,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 8,
+                  itemCount: _fetchNewArrival.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/productDetail');
+                        Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProductDetail(
+                                              allProduct: _fetchNewArrival[index])));
                       },
                       child: SizedBox(
                         width: 120,
@@ -434,7 +472,7 @@ class _HomepageState extends State<Homepage>
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
-                                    'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/cat.jpg',
+                                    _fetchNewArrival[index].item[0].itemImage,
                                     fit: BoxFit.cover,
                                     width: 110,
                                     height: 110,
@@ -444,18 +482,18 @@ class _HomepageState extends State<Homepage>
                               padding: const EdgeInsets.only(left: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children:  [
                                   Text(
-                                    'ProductName',
+                                    _fetchNewArrival[index].productName,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
                                   Text(
-                                    '\$10',
+                                    '\$${_fetchNewArrival[index].item[0].price}',
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
