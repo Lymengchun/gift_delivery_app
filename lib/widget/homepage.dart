@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
 import 'package:gift_delivery_app/language/english.dart';
 import 'package:gift_delivery_app/widget/cart.dart';
@@ -18,9 +19,11 @@ final catagroiesList = [
   'Flowers',
   'Fashion andd Lifestyle Gifts',
   'Jewellery',
-  'Toys & Games'
+  'Toys & Games',
+  'All'
 ];
 String? catagoriesValue;
+int? indexChip;
 
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
@@ -91,16 +94,16 @@ class _HomepageState extends State<Homepage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Customer name',
-                            style: TextStyle(
+                        Text(customerData!.name,
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             textAlign: TextAlign.start),
-                        const Text('Customer phone',
-                            style: TextStyle(
+                        Text(customerData!.phone,
+                            style: const TextStyle(
                                 color: Colors.white60,
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold),
@@ -110,16 +113,16 @@ class _HomepageState extends State<Homepage>
                           height: 20,
                         ),
                         Row(
-                          children: const [
-                            Text('$balance:',
+                          children: [
+                            const Text('$balance:',
                                 style: TextStyle(
                                     color: Colors.white54,
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1),
-                            Text(' \$100',
-                                style: TextStyle(
+                            Text(' \$${customerData!.balance}',
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 17),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1),
@@ -255,6 +258,8 @@ class _HomepageState extends State<Homepage>
     );
   }
 
+ 
+
   Widget homeScreen(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -267,7 +272,7 @@ class _HomepageState extends State<Homepage>
         const SizedBox(
           height: 20,
         ),
-      homeSearchBar,
+        homeSearchBar,
         Expanded(
             child: ListView(
           children: [
@@ -292,22 +297,31 @@ class _HomepageState extends State<Homepage>
                 runSpacing: 5.0,
                 children: catagroiesList
                     .map(
-                      (item) => InputChip(
-                          backgroundColor: Colors.blue,
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/homeProductList');
-                            // if (item == catagroiesList[0]) {
-                            // } else if (item == catagroiesList[1]) {
-                            // } else if (item == catagroiesList[2]) {
-                            // } else if (item == catagroiesList[3]) {
-                            // } else {}
-                          },
-                          label: Text(
-                            item,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )),
+                      (item) =>createChoiceChip(item, catagroiesList.indexOf(item))
+                      
+                      //  InputChip(
+                      //     backgroundColor: Colors.blue,
+                      //     onPressed: () {
+                      //       // Navigator.pushNamed(context, '/homeProductList');
+                      //       if (item == catagroiesList[0]) {
+                      //       } else if (item == catagroiesList[1]) {
+                      //       } else if (item == catagroiesList[2]) {
+                      //       } else if (item == catagroiesList[3]) {
+                      //       } else if (item == catagroiesList[4]) {
+                      //       } else {
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) =>
+                      //                     const HomeProductList()));
+                      //       }
+                      //     },
+                      //     label: Text(
+                      //       item,
+                      //       style: const TextStyle(
+                      //           color: Colors.white,
+                      //           fontWeight: FontWeight.bold),
+                      //     )),
                     )
                     .toList(),
               ),
@@ -335,7 +349,7 @@ class _HomepageState extends State<Homepage>
                   itemCount: 8,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, '/productDetail');
                       },
                       child: SizedBox(
@@ -407,7 +421,7 @@ class _HomepageState extends State<Homepage>
                   itemCount: 8,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, '/productDetail');
                       },
                       child: SizedBox(
@@ -479,7 +493,7 @@ class _HomepageState extends State<Homepage>
                   itemCount: 8,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, '/productDetail');
                       },
                       child: SizedBox(
@@ -528,10 +542,25 @@ class _HomepageState extends State<Homepage>
                   }),
             ),
             //BestSell product list view end
-           ],
+          ],
         )),
       ],
     );
+  }
+
+   Widget createChoiceChip(String label, int index) {
+
+    return InputChip(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>   HomeProductList(chipIndex: index ,)),);
+          print(index);
+        },
+        backgroundColor: Colors.blue,
+        label: Text(
+          label,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ));
   }
 
   Widget listScreen() {
@@ -706,32 +735,31 @@ class _HomepageState extends State<Homepage>
   Widget get homeSearchBar {
     return Padding(
       padding: const EdgeInsets.only(left: 18),
-      child:  SizedBox(
-          height: 35,
-          width: 300,
-          child: Center(
-            child: TextFormField(
-              onTap: (){
-                Navigator.pushNamed(context, '/homeProductList');
-              },
-              readOnly: true,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.white54,
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  fillColor: Colors.white12,
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  hintText: homeSearch,
-                  hintStyle: TextStyle(color: Colors.white54)),
-            ),
+      child: SizedBox(
+        height: 35,
+        width: 300,
+        child: Center(
+          child: TextFormField(
+            onTap: () {
+              Navigator.pushNamed(context, '/homeProductList');
+            },
+            readOnly: true,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.white54,
+                ),
+                contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                fillColor: Colors.white12,
+                filled: true,
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                hintText: homeSearch,
+                hintStyle: TextStyle(color: Colors.white54)),
           ),
-   
+        ),
       ),
     );
   }

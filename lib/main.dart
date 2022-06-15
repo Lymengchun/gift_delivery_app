@@ -1,11 +1,12 @@
+
 import 'package:flutter/material.dart';
+import 'package:gift_delivery_app/admin%20page&staff/add_product_controller.dart';
 import 'package:gift_delivery_app/admin%20page&staff/list_item.dart';
 import 'package:gift_delivery_app/admin%20page&staff/manage_home.dart';
 import 'package:gift_delivery_app/admin%20page&staff/manage_product.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/widget/about.dart';
 import 'package:gift_delivery_app/widget/deposit.dart';
-import 'package:gift_delivery_app/widget/home_product_list.dart';
 import 'package:gift_delivery_app/widget/homepage.dart';
 import 'package:gift_delivery_app/widget/product_detail.dart';
 import 'package:gift_delivery_app/widget/setting.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'Gift Delevery',
       theme: ThemeData(
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
         '/setting':((context) => const Setting()),
         '/about':(context) => const About(),
         '/deposit':(context) => const Deposit(),
-        '/homeProductList':(context) => const HomeProductList()
+        // '/homeProductList':(context) => const HomeProductList()
       },
     );
   }
@@ -70,13 +72,33 @@ class MyApp extends StatelessWidget {
 // }
 
 
-class AppRouteManage extends StatelessWidget {
+class AppRouteManage extends StatefulWidget {
   const AppRouteManage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return (userPhone == "0964037982")? const ManageHome():const Homepage();
+  State<AppRouteManage> createState() => _AppRouteManageState();
+}
+
+  
+
+class _AppRouteManageState extends State<AppRouteManage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // getUserData();
   }
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(future: getUserData(), builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
+        return (customerData?.type == 'customer')?const Homepage():(userPhone == '0964037982')?const ManageHome():const Center(child: CircularProgressIndicator());
+        // ?:const ManageHome();
+     },);
+
+    
+    // (userPhone == "0964037982")? const ManageHome():const Homepage();
+  }
+
 }
 
 

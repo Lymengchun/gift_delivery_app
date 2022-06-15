@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gift_delivery_app/language/admin_english.dart';
 import 'package:gift_delivery_app/language/english.dart';
 
 class Setting extends StatefulWidget {

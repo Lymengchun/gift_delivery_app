@@ -47,7 +47,12 @@ const productName = "Lorem ipsum dolor sit amet consectetur.";
 const price = "25\$";
 const deliveryTo = "Delivery to";
 const deliveryOn = "Delivery on";
-
+const stock = 'Stock';
+const sold = 'Sold';
+const rating = 'Rating';
+const score = 'Score';
+const relateProduct = 'Relate Product';
+const addToCart = 'Add To Cart';
 //cart
 const cartTitle = "Cart";
 const selectAll = "Select all";

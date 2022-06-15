@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
 import 'package:gift_delivery_app/admin%20page&staff/add_product.dart';
-import 'package:gift_delivery_app/admin%20page&staff/add_product_controller.dart';
 import 'package:gift_delivery_app/admin%20page&staff/manage_product_detail.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
