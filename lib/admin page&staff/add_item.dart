@@ -150,35 +150,7 @@ class _AddItemState extends State<AddItem> {
             const SizedBox(
               height: 10,
             ),
-            // TextFormField(
-            //   controller: itemImageController,
-            //   onTap: () async {
-            //     final ImagePicker _picker = ImagePicker();
-            //     final XFile? image =
-            //         await _picker.pickImage(source: ImageSource.gallery);
-            //     // print(image!.path);
 
-            //     File imageFile = File(image!.path.toString());
-
-            //     print(imageFile.path);
-            //   },
-            //   readOnly: true,
-            //   style: const TextStyle(color: Colors.white),
-            //   decoration: const InputDecoration(
-            //       fillColor: Colors.white12,
-            //       filled: true,
-            //       border: OutlineInputBorder(
-            //           borderSide: BorderSide.none,
-            //           borderRadius: BorderRadius.all(Radius.circular(15))),
-            //       hintText: addImage,
-            //       prefixIcon: Icon(
-            //         Icons.add_a_photo,
-            //         color: Colors.white54,
-            //       ),
-            //       hintStyle: TextStyle(
-            //         color: Colors.white54,
-            //       )),
-            // ),
 
             InkWell(
                 onTap: () async {
@@ -193,10 +165,7 @@ class _AddItemState extends State<AddItem> {
                   } catch (e) {
                     print("print error$e");
                   }
-                  // setState(() {
-                  //   imgUploaded = true;
-                  // });
-                  // print(image!.path);
+
                 },
                 child: (imgUploaded)
                     ? Container(
@@ -246,6 +215,7 @@ class _AddItemState extends State<AddItem> {
     }
 
     Item itemModel = Item(
+      
         price:double.parse(itemPriceController.text),
         itemImage: itemImageController.text,
         name: itemNameController.text);

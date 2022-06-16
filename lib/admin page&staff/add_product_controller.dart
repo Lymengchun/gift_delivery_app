@@ -39,8 +39,9 @@ Future<http.Response> postSingleProduct()async{
     headers: <String, String>{'Content-Type': 'application/json'},
     body: jsonProductData,
   );
-  print('error${res.body}');
-
+  if(res.statusCode == 200){
+    listItemsController = [];
+  }
   return res;
 }
 

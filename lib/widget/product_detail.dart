@@ -48,43 +48,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Flexible(
-                    //   flex: 2,
-                    //   child: Container(
-                
-                    //     child: Row(
-                    //      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //       children: const [
-                    //         Text("Number",style: TextStyle(
-                    //               color: Colors.white,
-                    //               fontSize: 20,
-                    //               ),
-                                
-                    //               ),
-                    //               SizedBox(width: 50,),
-                    //         Icon(
-                    //           Icons.remove_circle_outline,
-                    //           size: 20,
-                    //           color: Colors.white54,
-                    //         ),
-                    //         SizedBox(width: 20,),
-                    //         Text(
-                    //           '5',
-                    //           style: TextStyle(
-                    //               color: Colors.white,
-                    //               fontSize: 20,
-                    //               fontWeight: FontWeight.bold),
-                    //         ),
-                    //         SizedBox(width: 20,),
-                    //         Icon(
-                    //           Icons.add_circle_outline,
-                    //           size: 20,
-                    //           color: Colors.white54,
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
+            
                     Flexible(
                       flex: 4,
                       child: Container(

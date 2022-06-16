@@ -245,6 +245,7 @@ class _AddProductState extends State<AddProduct> {
         //     .showSnackBar(const SnackBar(content: Text("Added")));
         postSingleProduct();
         widget.callback!();
+
         Navigator.pop(context);
         clearProductController();
       },

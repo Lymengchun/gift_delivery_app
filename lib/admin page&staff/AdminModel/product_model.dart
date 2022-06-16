@@ -71,7 +71,7 @@ class Item {
 
     Map<String, dynamic> toJson() => {
         "item_image": itemImage,
-        "price": price,
+        "price":price.toDouble() ,
         "name": name,
     };
 }
