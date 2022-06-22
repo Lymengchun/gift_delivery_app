@@ -1,14 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
+import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/model/add_product_tocart.dart';
 import 'package:gift_delivery_app/widget/cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:http/http.dart' as http;
 
 class ProductDetail extends StatefulWidget {
   final ProductModel? allProduct;
- 
-  const ProductDetail({Key? key, this.allProduct,}) : super(key: key);
+
+  const ProductDetail({
+    Key? key,
+    this.allProduct,
+  }) : super(key: key);
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -21,7 +29,7 @@ class _ProductDetailState extends State<ProductDetail> {
   void initState() {
     super.initState();
     _allProduct = widget.allProduct!;
-    print(_allProduct);
+    print(_allProduct.productId);
   }
 
   @override
@@ -48,7 +56,6 @@ class _ProductDetailState extends State<ProductDetail> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-            
                     Flexible(
                       flex: 4,
                       child: Container(
@@ -58,7 +65,9 @@ class _ProductDetailState extends State<ProductDetail> {
                           child: ElevatedButton(
                             style:
                                 ElevatedButton.styleFrom(primary: Colors.green),
-                            onPressed: () {},
+                            onPressed: () {
+                              addProductToCart();
+                            },
                             child: const Text(addToCart),
                           )),
                     ),
@@ -68,6 +77,28 @@ class _ProductDetailState extends State<ProductDetail> {
         ],
       ),
     );
+  }
+
+  Future<http.Response> addProductToCart() async {
+    // ProductModel productData = ProductModel(soldAmount:0, productAmount:int.parse(productAmountController.text) , catagories: productCatagoriesController.text, item: listItemsController, starRating: [], productName: productNameController.text);
+
+    // String jsonProductData = jsonEncode(productData);
+    AddProductTocart addProductTocart = AddProductTocart(
+        userId: userId, productId: _allProduct.productId.toString());
+
+    // print('json data:${jsonProductData}');
+
+    final res = await http.post(
+        Uri.parse(urlEndpointEmu + "api/addProductToCart"),
+        headers: <String, String>{'Content-Type': 'application/json'},
+        body: jsonEncode(addProductTocart));
+
+    if (res.statusCode == 200) {
+      print(jsonEncode(addProductTocart));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Added")));
+    }
+    return res;
   }
 
   AppBar appbar(context) {

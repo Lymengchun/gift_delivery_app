@@ -50,7 +50,7 @@ Future getUserData()async{
     if (res.statusCode == 200) {
    
       customerData = customerModelFromJson(res.body);
-      
+      userId = customerData!.id!;
       print(res.body);
     } else {
       throw Exception('Failed to load Product data.');

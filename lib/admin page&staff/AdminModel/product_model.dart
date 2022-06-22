@@ -14,6 +14,7 @@ String productModelToJson(List<ProductModel> data) => json.encode(List<dynamic>.
 
 class ProductModel {
     ProductModel({
+        this.productId,
         required this.soldAmount,
         required this.productAmount,
         required this.catagories,
@@ -22,6 +23,7 @@ class ProductModel {
         required this.starRating,
         required this.productName,
     });
+    String? productId;
     String productName;
     int soldAmount;
     int productAmount;
@@ -36,12 +38,13 @@ class ProductModel {
         catagories: json["catagories"],
         postDate: DateTime.parse(json["post_date"]),
         productName: json["product_name"],
-        
+        productId: json["_id"],
         item: List<Item>.from(json["item"].map((x) => Item.fromJson(x))),
-        starRating: List<dynamic>.from(json["star_rating"].map((x) => x)),
+        starRating: List<dynamic>.from(json["star_rating"].map((x) => x)), 
     );
 
     Map<String, dynamic> toJson() => {
+        "product_id":productId,
         "product_name":productName,
         "sold_amount": soldAmount,
         "product_amount": productAmount,

@@ -8,6 +8,7 @@ import 'package:gift_delivery_app/widget/home_product_list.dart';
 import 'package:gift_delivery_app/widget/product_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -28,15 +29,18 @@ String? catagoriesValue;
 int? indexChip;
 List<ProductModel> _fetchBestSell = [];
 List<ProductModel> _fetchNewArrival = [];
+
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  
+
   @override
   void initState() {
     super.initState();
     fetchBestSell();
-     fetchNewArrival();
+    fetchNewArrival();
+    // initPlatform();
+
   }
 
   void _onItemTapped(int index) {
@@ -45,25 +49,26 @@ class _HomepageState extends State<Homepage>
     });
   }
 
-    void fetchBestSell() async {
+  void fetchBestSell() async {
     final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchBestSell"));
     if (res.statusCode == 200) {
       setState(() {
         _fetchBestSell = productModelFromJson(res.body);
+        
       });
-    
+
     } else {
       throw Exception('Failed to load Product data.');
     }
   }
 
-    void fetchNewArrival() async {
-    final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchNewestProduct"));
+  void fetchNewArrival() async {
+    final res =
+        await http.get(Uri.parse(urlEndpointEmu + "api/fetchNewestProduct"));
     if (res.statusCode == 200) {
       setState(() {
         _fetchNewArrival = productModelFromJson(res.body);
       });
-    
     } else {
       throw Exception('Failed to load Product data.');
     }
@@ -288,8 +293,6 @@ class _HomepageState extends State<Homepage>
     );
   }
 
- 
-
   Widget homeScreen(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -326,33 +329,33 @@ class _HomepageState extends State<Homepage>
                 spacing: 5.0,
                 runSpacing: 5.0,
                 children: catagroiesList
-                    .map(
-                      (item) =>createChoiceChip(item, catagroiesList.indexOf(item))
-                      
-                      //  InputChip(
-                      //     backgroundColor: Colors.blue,
-                      //     onPressed: () {
-                      //       // Navigator.pushNamed(context, '/homeProductList');
-                      //       if (item == catagroiesList[0]) {
-                      //       } else if (item == catagroiesList[1]) {
-                      //       } else if (item == catagroiesList[2]) {
-                      //       } else if (item == catagroiesList[3]) {
-                      //       } else if (item == catagroiesList[4]) {
-                      //       } else {
-                      //         Navigator.push(
-                      //             context,
-                      //             MaterialPageRoute(
-                      //                 builder: (context) =>
-                      //                     const HomeProductList()));
-                      //       }
-                      //     },
-                      //     label: Text(
-                      //       item,
-                      //       style: const TextStyle(
-                      //           color: Colors.white,
-                      //           fontWeight: FontWeight.bold),
-                      //     )),
-                    )
+                    .map((item) =>
+                            createChoiceChip(item, catagroiesList.indexOf(item))
+
+                        //  InputChip(
+                        //     backgroundColor: Colors.blue,
+                        //     onPressed: () {
+                        //       // Navigator.pushNamed(context, '/homeProductList');
+                        //       if (item == catagroiesList[0]) {
+                        //       } else if (item == catagroiesList[1]) {
+                        //       } else if (item == catagroiesList[2]) {
+                        //       } else if (item == catagroiesList[3]) {
+                        //       } else if (item == catagroiesList[4]) {
+                        //       } else {
+                        //         Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(
+                        //                 builder: (context) =>
+                        //                     const HomeProductList()));
+                        //       }
+                        //     },
+                        //     label: Text(
+                        //       item,
+                        //       style: const TextStyle(
+                        //           color: Colors.white,
+                        //           fontWeight: FontWeight.bold),
+                        //     )),
+                        )
                     .toList(),
               ),
             ),
@@ -381,10 +384,10 @@ class _HomepageState extends State<Homepage>
                     return InkWell(
                       onTap: () {
                         Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProductDetail(
-                                              allProduct: _fetchBestSell[index])));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetail(
+                                    allProduct: _fetchBestSell[index])));
                       },
                       child: SizedBox(
                         width: 120,
@@ -406,7 +409,7 @@ class _HomepageState extends State<Homepage>
                               padding: const EdgeInsets.only(left: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:  [
+                                children: [
                                   Text(
                                     _fetchBestSell[index].productName,
                                     overflow: TextOverflow.ellipsis,
@@ -457,10 +460,10 @@ class _HomepageState extends State<Homepage>
                     return InkWell(
                       onTap: () {
                         Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProductDetail(
-                                              allProduct: _fetchNewArrival[index])));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetail(
+                                    allProduct: _fetchNewArrival[index])));
                       },
                       child: SizedBox(
                         width: 120,
@@ -482,7 +485,7 @@ class _HomepageState extends State<Homepage>
                               padding: const EdgeInsets.only(left: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:  [
+                                children: [
                                   Text(
                                     _fetchNewArrival[index].productName,
                                     overflow: TextOverflow.ellipsis,
@@ -586,11 +589,16 @@ class _HomepageState extends State<Homepage>
     );
   }
 
-   Widget createChoiceChip(String label, int index) {
-
+  Widget createChoiceChip(String label, int index) {
     return InputChip(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>   HomeProductList(chipIndex: index ,)),);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeProductList(
+                      chipIndex: index,
+                    )),
+          );
           print(index);
         },
         backgroundColor: Colors.blue,
@@ -636,31 +644,49 @@ class _HomepageState extends State<Homepage>
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Padding(
-          padding: EdgeInsets.only(left: 18),
-          child: Text(
-            "notificationScreen",
-            style: TextStyle(color: Colors.white),
+      children: [
+        // Padding(
+        //   padding: EdgeInsets.only(left: 18),
+        //   child: Text(
+        //     "notificationScreen",
+        //     style: TextStyle(color: Colors.white),
+        //   ),
+        // ),
+        // SizedBox(
+        //   height: 20,
+        // ),
+
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(color: Colors.white30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: const [
+              Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Text(
+                  "Clear",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
-        // homeSearchBar,
-        // Container(
-        //     height: 50,
-        //     width: 800,
-        //     color: Colors.transparent,
-        //     margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-        //     child: tabCategory),
-        // Expanded(
-        //     child: Container(
-        //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-        //   child: tabCategoryView(context),
-        // ))
+
+        const Text(
+          "OneSignal",
+          style: TextStyle(color: Colors.white),
+        )
       ],
     );
+  }
+
+  Future<void> initPlatform() async {
+    await OneSignal.shared.setAppId("ae52189d-9465-4c6c-93e4-f94e78cf51ff");
+    await OneSignal.shared
+        .getDeviceState()
+        .then((value) => {print("stateId:${value!.userId}")});
   }
 
   Widget deliveryScreen() {
@@ -710,11 +736,30 @@ class _HomepageState extends State<Homepage>
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Cart()));
               },
-              child: const Center(
-                  child: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.blue,
-              ))),
+              child: Stack(
+                children:  const [
+                  Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Center(
+                        child: Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.blue,
+                    )),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10,left: 20),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.amber,
+                      child: Text(
+                        "",
+                        style: TextStyle(color: Colors.blue,fontSize: 12,fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      radius: 8,
+                    ),
+                  ),
+                ],
+              )),
         ),
       ],
     );
