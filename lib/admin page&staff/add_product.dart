@@ -43,7 +43,7 @@ class _AddProductState extends State<AddProduct> {
       itemName = itemNameController;
       emptyItem = false;
     });
-    print(itemName.text);
+
   }
 
   @override

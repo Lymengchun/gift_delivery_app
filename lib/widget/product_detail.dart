@@ -5,18 +5,17 @@ import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.da
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/english.dart';
 import 'package:gift_delivery_app/model/add_product_tocart.dart';
-import 'package:gift_delivery_app/widget/cart.dart';
+import 'package:gift_delivery_app/model/rating.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 
 class ProductDetail extends StatefulWidget {
+  final Function? callback;
   final ProductModel? allProduct;
 
-  const ProductDetail({
-    Key? key,
-    this.allProduct,
-  }) : super(key: key);
+  const ProductDetail({Key? key, this.allProduct, this.callback})
+      : super(key: key);
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -24,12 +23,118 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   late ProductModel _allProduct;
-
+  List<ProductModel> _allProductList = [];
+  late double _avgStar = 0.0;
+  final catagroiesList = [
+    'Cakes',
+    'Flowers',
+    'Fashion and Lifestyle Gifts',
+    'Jewellery',
+    'Toys & Games',
+    'All'
+  ];
   @override
   void initState() {
     super.initState();
     _allProduct = widget.allProduct!;
-    print(_allProduct.productId);
+    
+    if (_allProduct.catagories == catagroiesList[0]) {
+      _fetchCakesCatagories();
+    } else if (_allProduct.catagories == catagroiesList[1]) {
+      _fetchFlowersCatagories();
+    } else if (_allProduct.catagories == catagroiesList[2]) {
+      _fetchFashionandLifestyleGiftsCatagories();
+    } else if (_allProduct.catagories == catagroiesList[3]) {
+      _fetchJewelleryCatagories();
+    } else {
+      _fetchToysnGamesCatagories();
+    }
+
+    _fetchAvgStar();
+  }
+
+  void _fetchAvgStar() async {
+    final res =
+        await http.get(Uri.parse(urlEndpointEmu + "api/avgStar/${_allProduct.productId}"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _avgStar =jsonDecode(res.body)[0]['averageStar'];
+      });
+      // print(jsonDecode(res.body)[0]['averageStar']);
+ 
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+  void _fetchCakesCatagories() async {
+    final res =
+        await http.get(Uri.parse(urlEndpointEmu + "api/fetchCakesCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProductList = productModelFromJson(res.body);
+        _allProductList.removeWhere(
+            (element) => element.productId == _allProduct.productId);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+  void _fetchFlowersCatagories() async {
+    final res = await http
+        .get(Uri.parse(urlEndpointEmu + "api/fetchFlowersCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProductList = productModelFromJson(res.body);
+        _allProductList.removeWhere(
+            (element) => element.productId == _allProduct.productId);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+  void _fetchFashionandLifestyleGiftsCatagories() async {
+    final res = await http.get(Uri.parse(
+        urlEndpointEmu + "api/fetchFashionandLifestyleGiftsCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProductList = productModelFromJson(res.body);
+        _allProductList.removeWhere(
+            (element) => element.productId == _allProduct.productId);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+  void _fetchJewelleryCatagories() async {
+    final res = await http
+        .get(Uri.parse(urlEndpointEmu + "api/fetchJewelleryCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProductList = productModelFromJson(res.body);
+        _allProductList.removeWhere(
+            (element) => element.productId == _allProduct.productId);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+  void _fetchToysnGamesCatagories() async {
+    final res = await http
+        .get(Uri.parse(urlEndpointEmu + "api/fetchToysnGamesCatagories"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProductList = productModelFromJson(res.body);
+        _allProductList.removeWhere(
+            (element) => element.productId == _allProduct.productId);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
   }
 
   @override
@@ -67,6 +172,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ElevatedButton.styleFrom(primary: Colors.green),
                             onPressed: () {
                               addProductToCart();
+
+                              Navigator.pop(context);
                             },
                             child: const Text(addToCart),
                           )),
@@ -80,13 +187,8 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Future<http.Response> addProductToCart() async {
-    // ProductModel productData = ProductModel(soldAmount:0, productAmount:int.parse(productAmountController.text) , catagories: productCatagoriesController.text, item: listItemsController, starRating: [], productName: productNameController.text);
-
-    // String jsonProductData = jsonEncode(productData);
     AddProductTocart addProductTocart = AddProductTocart(
         userId: userId, productId: _allProduct.productId.toString());
-
-    // print('json data:${jsonProductData}');
 
     final res = await http.post(
         Uri.parse(urlEndpointEmu + "api/addProductToCart"),
@@ -94,7 +196,7 @@ class _ProductDetailState extends State<ProductDetail> {
         body: jsonEncode(addProductTocart));
 
     if (res.statusCode == 200) {
-      print(jsonEncode(addProductTocart));
+      widget.callback!();
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Added")));
     }
@@ -106,23 +208,23 @@ class _ProductDetailState extends State<ProductDetail> {
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.blue,
       elevation: 0,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 20.0,
-          ),
-          child: GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Cart()));
-              },
-              child: const Center(
-                  child: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.blue,
-              ))),
-        )
-      ],
+      // actions: [
+      //   Padding(
+      //     padding: const EdgeInsets.only(
+      //       right: 20.0,
+      //     ),
+      //     child: GestureDetector(
+      //         onTap: () {
+      //           Navigator.push(context,
+      //               MaterialPageRoute(builder: (context) => const Cart()));
+      //         },
+      //         child: const Center(
+      //             child: Icon(
+      //           Icons.shopping_cart_outlined,
+      //           color: Colors.blue,
+      //         ))),
+      //   )
+      // ],
     );
   }
 
@@ -212,7 +314,7 @@ class _ProductDetailState extends State<ProductDetail> {
           ),
           decoration: BoxDecoration(
               color: Colors.white12, borderRadius: BorderRadius.circular(20)),
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
         ),
         const SizedBox(
           height: 20,
@@ -236,11 +338,13 @@ class _ProductDetailState extends State<ProductDetail> {
           height: 150,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 8,
+              itemCount: _allProductList.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, '/productDetail');
+                    setState(() {
+                      _allProduct = _allProductList[index];
+                    });
                   },
                   child: SizedBox(
                     width: 120,
@@ -252,7 +356,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.network(
-                                'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/cat.jpg',
+                                _allProductList[index].item[0].itemImage,
                                 fit: BoxFit.cover,
                                 width: 110,
                                 height: 110,
@@ -262,18 +366,18 @@ class _ProductDetailState extends State<ProductDetail> {
                           padding: const EdgeInsets.only(left: 5),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                'ProductName',
+                                _allProductList[index].productName,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                '\$10',
+                                "\$${_allProductList[index].item[0].price}",
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
@@ -321,7 +425,7 @@ class _ProductDetailState extends State<ProductDetail> {
               children: [
                 RatingBar.builder(
                   unratedColor: Colors.white12,
-                  initialRating: 3,
+                  initialRating: 0,
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,
@@ -331,12 +435,25 @@ class _ProductDetailState extends State<ProductDetail> {
                     Icons.star,
                     color: Colors.amber,
                   ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
+                  onRatingUpdate: (rating) async {
+                    Rating raingModel = Rating(userId:userId ,productId:_allProduct.productId ,star: rating.toDouble());
+                    final res = await http.post(
+                      Uri.parse(urlEndpointEmu + "api/starRating"),
+                      headers: <String, String>{
+                        'Content-Type': 'application/json'
+                      },
+                      body: json.encode(raingModel) ,
+                    );
+
+                    if(res.statusCode == 200){
+                      // ignore: avoid_print
+                      print(rating);
+                    }
                   },
                 ),
                 Text(
-                  '5.0',
+                  "$_avgStar",
+                  
                   style: GoogleFonts.poppins(
                       textStyle: const TextStyle(
                           fontSize: 20,

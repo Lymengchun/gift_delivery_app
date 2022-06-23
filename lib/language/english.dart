@@ -59,6 +59,7 @@ const cartTitle = "Cart";
 const selectAll = "Select all";
 const edit = "Edit";
 const submission = "Submission";
+const emptyCart = "Cart Empty";
 
 //add Address
 
@@ -73,4 +74,6 @@ const addReferent = "Add Referent";
 
 //setting 
 const language = 'Language';
+
+
 

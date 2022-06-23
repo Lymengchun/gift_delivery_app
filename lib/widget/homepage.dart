@@ -29,18 +29,38 @@ String? catagoriesValue;
 int? indexChip;
 List<ProductModel> _fetchBestSell = [];
 List<ProductModel> _fetchNewArrival = [];
+int numOfCart = 0;
 
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-
+  late ProductDetail productDetail;
+  late Cart cart;
   @override
   void initState() {
     super.initState();
     fetchBestSell();
     fetchNewArrival();
+    fetchProductCartList();
+    productDetail = ProductDetail(callback:callback ,);
+    cart = Cart(callback: callback,);
     // initPlatform();
 
+  }
+
+    void fetchProductCartList() async {
+    final res = await http
+        .get(Uri.parse(urlEndpointEmu + "api/fetchProductFromCart/$userId"));
+    if (res.statusCode == 200) {
+      setState(() {
+        numOfCart = productModelFromJson(res.body).length;
+        print("callback");
+      });
+
+    
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
   }
 
   void _onItemTapped(int index) {
@@ -72,6 +92,14 @@ class _HomepageState extends State<Homepage>
     } else {
       throw Exception('Failed to load Product data.');
     }
+  }
+
+    void callback() {
+    setState(() {
+      fetchProductCartList();
+      
+    });
+
   }
 
   @override
@@ -387,7 +415,7 @@ class _HomepageState extends State<Homepage>
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductDetail(
-                                    allProduct: _fetchBestSell[index])));
+                                    allProduct: _fetchBestSell[index],callback: callback,)));
                       },
                       child: SizedBox(
                         width: 120,
@@ -463,7 +491,7 @@ class _HomepageState extends State<Homepage>
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductDetail(
-                                    allProduct: _fetchNewArrival[index])));
+                                    allProduct: _fetchNewArrival[index],callback: callback,)));
                       },
                       child: SizedBox(
                         width: 120,
@@ -734,11 +762,11 @@ class _HomepageState extends State<Homepage>
           child: GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Cart()));
+                    MaterialPageRoute(builder: (context) =>  Cart(callback: callback,)));
               },
               child: Stack(
-                children:  const [
-                  Padding(
+                children:   [
+                  const Padding(
                     padding: EdgeInsets.only(left: 5),
                     child: Center(
                         child: Icon(
@@ -746,18 +774,18 @@ class _HomepageState extends State<Homepage>
                       color: Colors.blue,
                     )),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10,left: 20),
+                  (numOfCart!=0)?Padding(
+                    padding: const EdgeInsets.only(top: 10,left: 20),
                     child: CircleAvatar(
                       backgroundColor: Colors.amber,
                       child: Text(
-                        "",
-                        style: TextStyle(color: Colors.blue,fontSize: 12,fontWeight: FontWeight.bold),
+                        numOfCart.toString(),
+                        style: const TextStyle(color: Colors.blue,fontSize: 12,fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       radius: 8,
                     ),
-                  ),
+                  ):Container(),
                 ],
               )),
         ),

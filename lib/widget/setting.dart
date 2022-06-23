@@ -23,28 +23,25 @@ class _SettingState extends State<Setting> {
               appBar: appbar(context),
               body: ListView(
                 children: [
-                  Container(
-                    // decoration: const BoxDecoration(color: Colors.),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            language,
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          const SizedBox(width: 200,),
-                          DropdownButton(
-                            hint: Text(languageList[1],style: const TextStyle(color: Colors.white),),
-                            dropdownColor: Colors.black,
-                            value: languageValue,
-                            items: languageList.map(buildMenuItem).toList(),
-                            onChanged: (value) => setState(() {
-                              languageValue = value.toString();
-                            }),
-                          )
-                        ],
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          language,
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        const SizedBox(width: 200,),
+                        DropdownButton(
+                          hint: Text(languageList[1],style: const TextStyle(color: Colors.white),),
+                          dropdownColor: Colors.black,
+                          value: languageValue,
+                          items: languageList.map(buildMenuItem).toList(),
+                          onChanged: (value) => setState(() {
+                            languageValue = value.toString();
+                          }),
+                        )
+                      ],
                     ),
                   )
                 ],

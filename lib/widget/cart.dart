@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
@@ -12,7 +11,8 @@ import 'package:group_button/group_button.dart';
 import 'package:http/http.dart' as http;
 
 class Cart extends StatefulWidget {
-  const Cart({Key? key}) : super(key: key);
+  final Function? callback;
+  const Cart({Key? key,this.callback}) : super(key: key);
 
   @override
   State<Cart> createState() => _CartState();
@@ -22,10 +22,10 @@ final controller = GroupButtonController();
 List<ProductModel> _fetchProductCartList = [];
 
 class _CartState extends State<Cart> {
-  int numOfCart = 0;
+ 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     fetchProductCartList();
   }
@@ -36,18 +36,18 @@ class _CartState extends State<Cart> {
     if (res.statusCode == 200) {
       setState(() {
         _fetchProductCartList = productModelFromJson(res.body);
-
-        numOfCart = _fetchProductCartList.length;
+      
       });
-      print("cart:${res.body}");
+      cartAmout = _fetchProductCartList.length;
+      widget.callback;
+    
     } else {
       throw Exception('Failed to load Product data.');
     }
   }
 
    Future<http.Response> removeProductIncart(idProduct) async {
-      print("userId:$userId");
-      print("IdProduct:$idProduct");
+
        AddProductTocart addProductTocart = AddProductTocart(
                       userId: userId,
                       productId: idProduct.toString());
@@ -60,6 +60,7 @@ class _CartState extends State<Cart> {
                       body: jsonEncode(addProductTocart));
 
                   if (res.statusCode == 200) {
+                    widget.callback!();
                     setState(() {
                       fetchProductCartList();
                     });
@@ -187,12 +188,15 @@ class _CartState extends State<Cart> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
         SizedBox(
-          height: 400,
-          child: ListView.builder(
+          height:(_fetchProductCartList.isNotEmpty)?300:200,
+          child: (_fetchProductCartList.isNotEmpty)?ListView.builder(
               itemCount: _fetchProductCartList.length,
               itemBuilder: (BuildContext context, index) {
-                return  cartList(context, _fetchProductCartList[index]);
-              }),
+                return cartList(context, _fetchProductCartList[index]);
+              }):const Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: Center(child: Text(emptyCart,style: TextStyle(color: Colors.white24,fontSize: 30),),),
+              ),
         ),
         const SizedBox(
           height: 20,
@@ -313,6 +317,7 @@ class _CartState extends State<Cart> {
               InkWell(
                 onTap: ()  {
                    removeProductIncart(fetchProductCartList.productId);
+                   widget.callback;
                 },
                 child:  Row(
                     children: const [
