@@ -4,7 +4,7 @@ import 'package:gift_delivery_app/language/english.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:http/http.dart' as http;
 
 class EnterPhone extends StatefulWidget {
   const EnterPhone({Key? key}) : super(key: key);
@@ -131,6 +131,8 @@ Widget inputPhone(phoneController) {
   );
 }
 
+
+
 Widget btBottom(context,phoneController) {
   return Column(
     children: [
@@ -139,7 +141,7 @@ Widget btBottom(context,phoneController) {
         height: 60,
         child: ElevatedButton(
             onPressed: () {
-              //  loginWithPhone();
+               loginWithPhone();
                userPhone = phoneController.text.toString();
               Navigator.push(
                         context,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gift_delivery_app/auth%20screen/enter_phone.dart';
+import 'package:gift_delivery_app/globalvar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../language/english.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({Key? key}) : super(key: key);
@@ -11,6 +13,18 @@ class StartScreen extends StatefulWidget {
 }
 
 class _StartScreenState extends State<StartScreen> {
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    go_home();
+  }
+
+  void go_home() {
+    if (userPhone.isNotEmpty) {
+      Navigator.pushNamed(context, '/');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,12 +81,9 @@ class _StartScreenState extends State<StartScreen> {
                               color: Colors.white)),
                       textAlign: TextAlign.center,
                     ),
-                    style:
-                        ElevatedButton.styleFrom(fixedSize: const Size(300, 60),
-                         
-                        )               
-                        ),
-   
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(300, 60),
+                    )),
                 const SizedBox(
                   height: 35,
                 ),

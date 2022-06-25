@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gift_delivery_app/admin%20page&staff/manage_home.dart';
+import 'package:gift_delivery_app/auth%20screen/enter_name.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/english.dart';
-import 'package:gift_delivery_app/widget/homepage.dart';
+import 'package:gift_delivery_app/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyPhone extends StatefulWidget {
   const VerifyPhone({Key? key}) : super(key: key);
@@ -25,10 +31,12 @@ final TextEditingController _optSix = TextEditingController();
 class _VerifyPhoneState extends State<VerifyPhone> {
   String pinOpt = "";
   FirebaseAuth auth = FirebaseAuth.instance;
+  bool ishas = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    findPhone();
   }
 
   @override
@@ -186,9 +194,9 @@ Widget btBottom(context) {
                          _optFive.text+
                          _optSix.text ;
               });
-              // verifyOTP();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Homepage()));
+              verifyOTP();
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => const Homepage()));
             },
             child: Text(
               btVerify,
@@ -208,6 +216,20 @@ Widget btBottom(context) {
     ],
   );
 }
+    void findPhone() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/findUser/$userPhone"));
+    if (res.statusCode == 200) {
+      if(json.decode(res.body)['phone'] != null){
+        setState(() {
+          ishas = true;
+        });
+      }else{
+        ishas = false;
+      }
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
 
   void verifyOTP() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -220,7 +242,7 @@ Widget btBottom(context) {
         });
       },
     ).whenComplete(
-      () {
+      () async {
         if (user != null) {
           Fluttertoast.showToast(
             msg: "You are logged in successfully",
@@ -231,7 +253,10 @@ Widget btBottom(context) {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          Navigator.pushNamed(context, '/homepage');
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('user_phone',userPhone);
+          // Navigator.pushNamed(context, '/homepage');
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>(userPhone == '0964037982')?ManageHome():(ishas)?MyApp():EnterName()));
         } else {
           Fluttertoast.showToast(
             msg: "your login is failed",

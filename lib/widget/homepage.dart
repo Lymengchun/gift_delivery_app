@@ -465,7 +465,7 @@ class _HomepageState extends State<Homepage>
                                     ),
                                   ),
                                   Text(
-                                    '\$${_fetchBestSell[index].item[0].price}',
+                                    '\$${_fetchBestSell[index].item[0].price.toDouble()}',
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       color: Colors.white,
@@ -541,7 +541,7 @@ class _HomepageState extends State<Homepage>
                                     ),
                                   ),
                                   Text(
-                                    '\$${_fetchNewArrival[index].item[0].price}',
+                                    '\$${_fetchNewArrival[index].item[0].price.toDouble()}',
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       color: Colors.white,
@@ -617,7 +617,7 @@ class _HomepageState extends State<Homepage>
                                     ),
                                   ),
                                    Text(
-                                    '\$${_fetchMostRating[index].item[0].price}',
+                                    '\$${_fetchMostRating[index].item[0].price.toDouble()}',
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       color: Colors.white,
@@ -647,7 +647,7 @@ class _HomepageState extends State<Homepage>
             context,
             MaterialPageRoute(
                 builder: (context) => HomeProductList(
-                      chipIndex: index,
+                      chipIndex: index,callback: callback,
                     )),
           );
           print(index);

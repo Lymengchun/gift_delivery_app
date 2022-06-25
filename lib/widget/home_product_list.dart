@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 
 class HomeProductList extends StatefulWidget {
   final int? chipIndex;
-  const HomeProductList({Key? key, this.chipIndex}) : super(key: key);
+  final Function? callback;
+  const HomeProductList({Key? key, this.chipIndex,this.callback}) : super(key: key);
 
   @override
   State<HomeProductList> createState() => _HomeProductListState();
@@ -111,7 +112,7 @@ class _HomeProductListState extends State<HomeProductList> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ProductDetail(
-                                              allProduct: _allProduct[index])));
+                                              allProduct: _allProduct[index],callback: widget.callback,)));
                                 },
                                 child: SizedBox(
                                   child: Column(
@@ -147,7 +148,7 @@ class _HomeProductListState extends State<HomeProductList> {
                                               ),
                                             ),
                                             Text(
-                                              '\$${_allProduct[index].item[0].price}',
+                                              '\$${_allProduct[index].item[0].price.toDouble()}',
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 color: Colors.white,
@@ -178,6 +179,7 @@ class _HomeProductListState extends State<HomeProductList> {
       setState(() {
         _allProduct = productModelFromJson(res.body);
       });
+      
     } else {
       throw Exception('Failed to load Product data.');
     }

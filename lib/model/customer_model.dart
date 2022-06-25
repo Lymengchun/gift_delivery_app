@@ -21,6 +21,8 @@ class CustomerModel {
         this.deposit,
         this.notification,
         this.setting,
+      
+        
     });
 
     String? id;
@@ -34,6 +36,7 @@ class CustomerModel {
     List<Deposit>? deposit;
     List<Notification>? notification;
     Setting? setting;
+
 
     factory CustomerModel.fromJson(Map<String, dynamic> json) => CustomerModel(
         id: json["_id"],

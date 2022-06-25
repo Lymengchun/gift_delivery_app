@@ -188,7 +188,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ElevatedButton.styleFrom(primary: Colors.green),
                             onPressed: () {
                               addProductToCart();
-
+                    
                               Navigator.pop(context);
                             },
                             child: const Text(addToCart),

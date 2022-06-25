@@ -9,7 +9,7 @@ class ManageProductDetail extends StatefulWidget {
 
   const ManageProductDetail({Key? key, required this.allProduct})
       : super(key: key);
-
+      
   @override
   State<ManageProductDetail> createState() => _ManageProductDetailState();
 }

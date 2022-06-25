@@ -58,12 +58,12 @@ class ProductModel {
 class Item {
     Item({
         required this.itemImage,
-         required this.price,
+        required this.price,
         required this.name,
     });
 
     String itemImage;
-    double price;
+    dynamic price;
     String name;
 
     factory Item.fromJson(Map<String, dynamic> json) => Item(
@@ -74,7 +74,7 @@ class Item {
 
     Map<String, dynamic> toJson() => {
         "item_image": itemImage,
-        "price":price.toDouble() ,
+        "price":price ,
         "name": name,
     };
 }

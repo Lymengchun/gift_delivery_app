@@ -1,7 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:gift_delivery_app/auth%20screen/upload_profile.dart';
+import 'package:gift_delivery_app/admin%20page&staff/add_product_controller.dart';
+import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/english.dart';
+import 'package:gift_delivery_app/main.dart';
+import 'package:gift_delivery_app/model/user_model.dart';
+import 'package:gift_delivery_app/widget/homepage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 
 class EnterName extends StatefulWidget {
@@ -18,7 +25,8 @@ void _scrollDown() {
   _controller.jumpTo(_controller.position.minScrollExtent);
 }
 class _EnterNameState extends State<EnterName> {
-
+TextEditingController firstNameController = TextEditingController();
+TextEditingController lastNameController = TextEditingController();
   @override
   void initState() {
   
@@ -63,7 +71,7 @@ class _EnterNameState extends State<EnterName> {
       ),
     );
   }
-}
+
 
 Widget get topTitle {
   return Center(
@@ -105,6 +113,7 @@ Widget get inputName {
             _scrollDown();
           },
           style: const TextStyle(color: Colors.white),
+          controller: firstNameController,
           decoration: const InputDecoration(
               
               fillColor: Colors.white12,
@@ -121,6 +130,7 @@ Widget get inputName {
           height: 10,
         ),
         TextFormField(
+          controller: lastNameController,
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
               fillColor: Colors.white12,
@@ -138,6 +148,18 @@ Widget get inputName {
   );
 }
 
+Future<void> initUser()async{
+    UserModel userModel = UserModel(phone: userPhone, name: '${firstNameController.text}${lastNameController.text}');
+    await http.post(
+    Uri.parse(urlEndpointEmu + "api/initCustomer"),
+    headers: <String, String>{'Content-Type': 'application/json'},
+    body: jsonEncode(userModel),
+  ).then((value) =>{
+    getUserData(),
+    Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const MyApp()))});
+}
+
 Widget btBottom(context) {
   return Column(
     children: [
@@ -149,8 +171,7 @@ Widget btBottom(context) {
         height: 60,
         child: ElevatedButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const UploadProfile()));
+              initUser();
             },
             child: Text(
               btinputContinue,
@@ -169,4 +190,5 @@ Widget btBottom(context) {
       ),
     ],
   );
+}
 }

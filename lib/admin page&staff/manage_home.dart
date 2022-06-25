@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
 import 'package:gift_delivery_app/admin%20page&staff/add_product_controller.dart';
+import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
+import 'package:gift_delivery_app/language/english.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ManageHome extends StatefulWidget {
@@ -112,7 +115,7 @@ class _ManageHomeState extends State<ManageHome> {
 
         ],
       ),
-      drawer: drawer,
+      drawer: drawer(),
   
     );
   }
@@ -170,15 +173,161 @@ class _ManageHomeState extends State<ManageHome> {
   );
   }
 
-  Drawer get drawer {
-  return const Drawer(
-    backgroundColor: Colors.white12,
-    child: SafeArea(
-        child: Text(
-      "Hello",
-      style: TextStyle(color: Colors.white),
-    )),
-  );
-}
+  Drawer drawer() {
+    return Drawer(
+      backgroundColor: Colors.white12,
+      child: SafeArea(
+          child: Container(
+        color: Colors.black,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Colors.blueAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/cat.jpg'),
+                        // backgroundColor: Colors.amber,
+                        radius: 40,
+                      )),
+                  SizedBox(
+                    width: 180,
+                
+                  )
+                ],
+              ),
+            ),
+            const Divider(
+              thickness: 5,
+              height: 5,
+              color: Colors.white,
+            ),
+            Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/deposit');
+                  },
+                  child: Container(
+                      decoration: const BoxDecoration(color: Colors.amber),
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.monetization_on,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "  $deposit",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/setting');
+                  },
+                  child: Container(
+                      decoration: const BoxDecoration(color: Colors.white10),
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "  $setting",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/about');
+                  },
+                  child: Container(
+                      decoration: const BoxDecoration(color: Colors.white10),
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.info,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "  $about",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      )),
+                )
+              ],
+            ),
+            const Spacer(
+              flex: 8,
+            ),
+            InkWell(
+              onTap: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.clear();
+                    Navigator.pushNamed(context, '/enterPhone');
+              },
+              child: Container(
+                  decoration: const BoxDecoration(color: Colors.blue),
+                  alignment: Alignment.centerLeft,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          "  $logout",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  )),
+            )
+          ],
+        ),
+      )),
+    );
+  }
 }
 
