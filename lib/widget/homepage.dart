@@ -29,6 +29,8 @@ String? catagoriesValue;
 int? indexChip;
 List<ProductModel> _fetchBestSell = [];
 List<ProductModel> _fetchNewArrival = [];
+List<ProductModel> _fetchMostRating = [];
+
 int numOfCart = 0;
 
 class _HomepageState extends State<Homepage>
@@ -42,11 +44,14 @@ class _HomepageState extends State<Homepage>
     fetchBestSell();
     fetchNewArrival();
     fetchProductCartList();
+    fetchMostRating();
     productDetail = ProductDetail(callback:callback ,);
     cart = Cart(callback: callback,);
+
     // initPlatform();
 
   }
+
 
     void fetchProductCartList() async {
     final res = await http
@@ -86,8 +91,22 @@ class _HomepageState extends State<Homepage>
     final res =
         await http.get(Uri.parse(urlEndpointEmu + "api/fetchNewestProduct"));
     if (res.statusCode == 200) {
+      print("new arrival:${res.body}");
       setState(() {
         _fetchNewArrival = productModelFromJson(res.body);
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
+
+    void fetchMostRating() async {
+    final res =
+        await http.get(Uri.parse(urlEndpointEmu + "api/fetchMostRating"));
+    if (res.statusCode == 200) {
+      print("most rating:${res.body}");
+      setState(() {
+        _fetchMostRating = productModelFromJson(res.body);
       });
     } else {
       throw Exception('Failed to load Product data.');
@@ -544,7 +563,7 @@ class _HomepageState extends State<Homepage>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Most rating',
+                mostRating,
                 style: GoogleFonts.poppins(
                     textStyle: const TextStyle(
                         fontSize: 20,
@@ -559,11 +578,15 @@ class _HomepageState extends State<Homepage>
               height: 150,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 8,
+                  itemCount: _fetchMostRating.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/productDetail');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetail(
+                                    allProduct: _fetchMostRating[index],callback: callback,)));
                       },
                       child: SizedBox(
                         width: 120,
@@ -575,7 +598,7 @@ class _HomepageState extends State<Homepage>
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
-                                    'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/cat.jpg',
+                                    _fetchMostRating[index].item[0].itemImage,
                                     fit: BoxFit.cover,
                                     width: 110,
                                     height: 110,
@@ -585,18 +608,18 @@ class _HomepageState extends State<Homepage>
                               padding: const EdgeInsets.only(left: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children:  [
                                   Text(
-                                    'ProductName',
+                                    _fetchMostRating[index].productName,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
-                                  Text(
-                                    '\$10',
+                                   Text(
+                                    '\$${_fetchMostRating[index].item[0].price}',
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),

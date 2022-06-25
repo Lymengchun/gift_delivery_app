@@ -40,8 +40,9 @@ const deposit = 'Deposit';
 const setting = 'Setting';
 const logout = 'Logout';
 const about = 'About';
-const bestSell = 'Best Sell';
-const newArrival = 'New Arrival';
+const bestSell = 'Best Sell 🛍️';
+const newArrival = 'New Arrival 🔥';
+const mostRating = 'Most rating ⭐';
 
 //Product Detail and cart
 const productName = "Lorem ipsum dolor sit amet consectetur.";

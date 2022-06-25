@@ -25,6 +25,7 @@ class _ProductDetailState extends State<ProductDetail> {
   late ProductModel _allProduct;
   List<ProductModel> _allProductList = [];
   late double _avgStar = 0.0;
+  late double _initStar = 0.0;
   final catagroiesList = [
     'Cakes',
     'Flowers',
@@ -51,14 +52,29 @@ class _ProductDetailState extends State<ProductDetail> {
     }
 
     _fetchAvgStar();
+    _fetchStar();
+  }
+
+    void _fetchStar() async {
+    final res =
+        await http.get(Uri.parse(urlEndpointEmu + "api/fetchStar/${_allProduct.productId}/$userId"));
+    if (res.statusCode == 200) {
+      // print(json.decode(res.body)['star']);
+      setState(() {
+        _initStar = json.decode(res.body)['star'].toDouble();
+      });
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
   }
 
   void _fetchAvgStar() async {
     final res =
         await http.get(Uri.parse(urlEndpointEmu + "api/avgStar/${_allProduct.productId}"));
     if (res.statusCode == 200) {
+      print(jsonDecode(res.body)[0]['averageStar']);
       setState(() {
-        _avgStar =jsonDecode(res.body)[0]['averageStar'];
+        _avgStar = jsonDecode(res.body)[0]['averageStar'].toDouble();
       });
       // print(jsonDecode(res.body)[0]['averageStar']);
  
@@ -425,7 +441,7 @@ class _ProductDetailState extends State<ProductDetail> {
               children: [
                 RatingBar.builder(
                   unratedColor: Colors.white12,
-                  initialRating: 0,
+                  initialRating: _initStar,
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,

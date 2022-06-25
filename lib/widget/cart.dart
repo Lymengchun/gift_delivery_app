@@ -188,7 +188,7 @@ class _CartState extends State<Cart> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
         SizedBox(
-          height:(_fetchProductCartList.isNotEmpty)?300:200,
+          height:(_fetchProductCartList.isNotEmpty)?3510:200,
           child: (_fetchProductCartList.isNotEmpty)?ListView.builder(
               itemCount: _fetchProductCartList.length,
               itemBuilder: (BuildContext context, index) {
