@@ -23,6 +23,7 @@ class _EnterPhoneState extends State<EnterPhone> {
     super.initState();
   }
 
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -52,157 +53,163 @@ class _EnterPhoneState extends State<EnterPhone> {
       ),
     );
   }
-}
 
-Future<bool> _onBackButtonPressed(BuildContext context) async {
-  bool exitApp = await showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-            title: const Text('Alert'),
-            content: const Text('Do you want to close the app?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Yes'),
-              ),
-            ],
-          ));
-  return exitApp;
-}
+  Future<bool> _onBackButtonPressed(BuildContext context) async {
+    bool exitApp = await showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: const Text('Alert'),
+              content: const Text('Do you want to close the app?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Yes'),
+                ),
+              ],
+            ));
+    return exitApp;
+  }
 
-Widget get topTitle {
-  return Center(
-    child: Column(
-      children: [
-        Text(
-          phoneTitle,
-          style: GoogleFonts.poppins(
-              textStyle: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white)),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          phoneDetail,
-          style: GoogleFonts.poppins(
-              textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white38)),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(
-          height: 100,
-        ),
-      ],
-    ),
-  );
-}
-
-Widget inputPhone(phoneController) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 35),
-    child: Row(
-      children: [
-        Flexible(
-          flex: 1,
-          child: TextFormField(
-            readOnly: true,
-            keyboardType: TextInputType.phone,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-                fillColor: Colors.white12,
-                filled: true,
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
-                hintText: "+855",
-                hintStyle: TextStyle(color: Colors.white54)),
+  Widget get topTitle {
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            phoneTitle,
+            style: GoogleFonts.poppins(
+                textStyle: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white)),
+            textAlign: TextAlign.center,
           ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Flexible(
-          flex: 4,
-          child: TextFormField(
-            // maxLength: 10,
-            keyboardType: TextInputType.phone,
-            controller: phoneController,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-                fillColor: Colors.white12,
-                filled: true,
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
-                hintText: "Phone number",
-                hintStyle: TextStyle(color: Colors.white54)),
+          Text(
+            phoneDetail,
+            style: GoogleFonts.poppins(
+                textStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white38)),
+            textAlign: TextAlign.center,
           ),
-        ),
-      ],
-    ),
-  );
-}
+          const SizedBox(
+            height: 100,
+          ),
+        ],
+      ),
+    );
+  }
 
-Widget btBottom(context, phoneController) {
-  return Column(
-    children: [
-      SizedBox(
-        width: 320,
-        height: 60,
-        child: ElevatedButton(
-            onPressed: () {
-              if (userPhone.isNotEmpty) {
+  Widget inputPhone(phoneController) {
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 35),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              child: TextFormField(
+                readOnly: true,
+                keyboardType: TextInputType.phone,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                    fillColor: Colors.white12,
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    hintText: "+855",
+                    hintStyle: TextStyle(color: Colors.white54)),
+              ),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Flexible(
+              flex: 4,
+              child: TextFormField(
+                // maxLength: 10,
+                validator: (value) {
+                  if (value!.isNotEmpty) {
+                    return null;
+                  } else {
+                   return'please fill the phone number!';
+                  }
+                },
+                keyboardType: TextInputType.phone,
+                controller: phoneController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                    fillColor: Colors.white12,
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    hintText: "Phone number",
+                    hintStyle: TextStyle(color: Colors.white54)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget btBottom(context, phoneController) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 320,
+          height: 60,
+          child: ElevatedButton(
+              onPressed: () {
+                if (!_formKey.currentState!.validate()) {
+                  return;
+                }
                 userPhone = phoneController.text.toString();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const VerifyPhone()));
-              }else{
-                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text("please fill the phone number!")));
-    
-              }
-            },
-            child: Text(
-              btContinue,
-              style: GoogleFonts.poppins(
-                  textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white)),
-              textAlign: TextAlign.center,
-            ),
-            style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-            )))),
-      ),
-      const SizedBox(
-        height: 20,
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 70,
+              },
+              child: Text(
+                btContinue,
+                style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white)),
+                textAlign: TextAlign.center,
+              ),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              )))),
         ),
-        child: Text(
-          strBelowbt,
-          style: GoogleFonts.poppins(
-              textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white38)),
-          textAlign: TextAlign.center,
+        const SizedBox(
+          height: 20,
         ),
-      ),
-    ],
-  );
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 70,
+          ),
+          child: Text(
+            strBelowbt,
+            style: GoogleFonts.poppins(
+                textStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white38)),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
 }
