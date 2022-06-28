@@ -35,6 +35,8 @@ class MyApp extends StatelessWidget {
   
   // This widget is the root of your application.
   @override
+
+  
   Widget build(BuildContext context) {
     
     return MaterialApp(
@@ -89,7 +91,9 @@ class _CheckOldPhoneState extends State<CheckOldPhone> {
 
     getPhoneNumber()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userPhone = prefs.getString('user_phone')!;
+    if(prefs.getString('user_phone') != null){
+      userPhone = prefs.getString('user_phone')!;
+    }
     print(prefs.getString('user_phone'));
     Navigator.pushNamed(context, '/appRouteManage');
   }

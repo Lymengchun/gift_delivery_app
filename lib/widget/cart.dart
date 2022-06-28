@@ -22,6 +22,8 @@ final controller = GroupButtonController();
 List<ProductModel> _fetchProductCartList = [];
 
 class _CartState extends State<Cart> {
+  bool _value = false;
+  int val = -1;
  
   @override
   void initState() {
@@ -188,7 +190,7 @@ class _CartState extends State<Cart> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
         SizedBox(
-          height:(_fetchProductCartList.isNotEmpty)?3510:200,
+          height:(_fetchProductCartList.isNotEmpty)?350:200,
           child: (_fetchProductCartList.isNotEmpty)?ListView.builder(
               itemCount: _fetchProductCartList.length,
               itemBuilder: (BuildContext context, index) {
@@ -224,7 +226,8 @@ class _CartState extends State<Cart> {
                 border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
-                hintText: deliveryTo,
+                hintText:'Nika/Phnom penh/097867464', 
+                // deliveryTo,
                 hintStyle: TextStyle(
                   color: Colors.white54,
                 )),
@@ -364,9 +367,8 @@ class _CartState extends State<Cart> {
       ],
     );
   }
-}
 
-Widget get deliveryTimePicker {
+  Widget get deliveryTimePicker {
   return Column(
     children: [
       ListTile(
@@ -377,9 +379,17 @@ Widget get deliveryTimePicker {
           ),
         ),
         leading: Radio(
-          groupValue: null,
-          onChanged: (Null? value) {},
-          value: null,
+          groupValue: val,
+          value: 1,
+          fillColor: MaterialStateColor.resolveWith((states) => Colors.blue),
+          onChanged: (value) {
+            setState(() {
+               val = value as int;
+            });
+        
+          },
+        
+         
         ),
       ),
       ListTile(
@@ -390,9 +400,15 @@ Widget get deliveryTimePicker {
           ),
         ),
         leading: Radio(
-          groupValue: null,
-          onChanged: (Null? value) {},
-          value: null,
+           value: 2,
+          groupValue: val,
+          fillColor: MaterialStateColor.resolveWith((states) => Colors.blue),
+          onChanged: (value) {
+            setState(() {
+              val = value as int;
+            });
+          },
+         
         ),
       ),
       ListTile(
@@ -403,9 +419,16 @@ Widget get deliveryTimePicker {
           ),
         ),
         leading: Radio(
-          groupValue: null,
-          onChanged: (Null? value) {},
-          value: null,
+          value:3,
+          groupValue: val,
+          fillColor: MaterialStateColor.resolveWith((states) => Colors.blue),
+          onChanged: (value) { 
+            setState(() {
+              val = value as int;
+            });
+            
+          },
+        
         ),
       ),
       ListTile(
@@ -416,11 +439,22 @@ Widget get deliveryTimePicker {
           ),
         ),
         leading: Radio(
-          groupValue: null,
-          onChanged: (Null? value) {},
-          value: null,
+          value:4,
+          groupValue: val,
+          fillColor: MaterialStateColor.resolveWith((states) => Colors.blue),
+          onChanged: (value) {
+            
+            setState(() {
+              val = value as int;
+
+            });
+          },
+          
         ),
       )
     ],
   );
 }
+
+}
+

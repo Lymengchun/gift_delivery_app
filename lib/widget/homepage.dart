@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gift_delivery_app/admin%20page&staff/AdminModel/product_model.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:gift_delivery_app/language/admin_english.dart';
@@ -9,6 +10,7 @@ import 'package:gift_delivery_app/widget/product_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -45,15 +47,24 @@ class _HomepageState extends State<Homepage>
     fetchNewArrival();
     fetchProductCartList();
     fetchMostRating();
-    productDetail = ProductDetail(callback:callback ,);
-    cart = Cart(callback: callback,);
+    productDetail = ProductDetail(
+      callback: callback,
+    );
+    cart = Cart(
+      callback: callback,
+    );
 
     // initPlatform();
-
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    SystemNavigator.pop();
+  }
 
-    void fetchProductCartList() async {
+  void fetchProductCartList() async {
     final res = await http
         .get(Uri.parse(urlEndpointEmu + "api/fetchProductFromCart/$userId"));
     if (res.statusCode == 200) {
@@ -61,8 +72,6 @@ class _HomepageState extends State<Homepage>
         numOfCart = productModelFromJson(res.body).length;
         print("callback");
       });
-
-    
     } else {
       throw Exception('Failed to load Product data.');
     }
@@ -79,9 +88,7 @@ class _HomepageState extends State<Homepage>
     if (res.statusCode == 200) {
       setState(() {
         _fetchBestSell = productModelFromJson(res.body);
-        
       });
-
     } else {
       throw Exception('Failed to load Product data.');
     }
@@ -100,7 +107,7 @@ class _HomepageState extends State<Homepage>
     }
   }
 
-    void fetchMostRating() async {
+  void fetchMostRating() async {
     final res =
         await http.get(Uri.parse(urlEndpointEmu + "api/fetchMostRating"));
     if (res.statusCode == 200) {
@@ -113,12 +120,10 @@ class _HomepageState extends State<Homepage>
     }
   }
 
-    void callback() {
+  void callback() {
     setState(() {
       fetchProductCartList();
-      
     });
-
   }
 
   @override
@@ -130,22 +135,25 @@ class _HomepageState extends State<Homepage>
       deliveryScreen()
     ];
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: appbar(context),
-      body: Stack(
-        children: [
-          Container(
-            color: Colors.black,
-          ),
-          IndexedStack(
-            index: _selectedIndex,
-            children: screens,
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () =>_onBackButtonPressed(context),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: appbar(context),
+        body: Stack(
+          children: [
+            Container(
+              color: Colors.black,
+            ),
+            IndexedStack(
+              index: _selectedIndex,
+              children: screens,
+            ),
+          ],
+        ),
+        drawer: drawer(),
+        bottomNavigationBar: navigationbar(_selectedIndex, _onItemTapped),
       ),
-      drawer: drawer(),
-      bottomNavigationBar: navigationbar(_selectedIndex, _onItemTapped),
     );
   }
 
@@ -167,7 +175,7 @@ class _HomepageState extends State<Homepage>
                       padding: EdgeInsets.all(12.0),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                            'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/cat.jpg'),
+                            'https://giftdeliveryspace.sgp1.digitaloceanspaces.com/unnamed%20%281%29.webp'),
                         // backgroundColor: Colors.amber,
                         radius: 40,
                       )),
@@ -310,7 +318,11 @@ class _HomepageState extends State<Homepage>
               flex: 8,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.clear();
+                Navigator.pushNamed(context, '/enterPhone');
+              },
               child: Container(
                   decoration: const BoxDecoration(color: Colors.blue),
                   alignment: Alignment.centerLeft,
@@ -434,7 +446,9 @@ class _HomepageState extends State<Homepage>
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductDetail(
-                                    allProduct: _fetchBestSell[index],callback: callback,)));
+                                      allProduct: _fetchBestSell[index],
+                                      callback: callback,
+                                    )));
                       },
                       child: SizedBox(
                         width: 120,
@@ -510,7 +524,9 @@ class _HomepageState extends State<Homepage>
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductDetail(
-                                    allProduct: _fetchNewArrival[index],callback: callback,)));
+                                      allProduct: _fetchNewArrival[index],
+                                      callback: callback,
+                                    )));
                       },
                       child: SizedBox(
                         width: 120,
@@ -586,7 +602,9 @@ class _HomepageState extends State<Homepage>
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductDetail(
-                                    allProduct: _fetchMostRating[index],callback: callback,)));
+                                      allProduct: _fetchMostRating[index],
+                                      callback: callback,
+                                    )));
                       },
                       child: SizedBox(
                         width: 120,
@@ -608,7 +626,7 @@ class _HomepageState extends State<Homepage>
                               padding: const EdgeInsets.only(left: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:  [
+                                children: [
                                   Text(
                                     _fetchMostRating[index].productName,
                                     overflow: TextOverflow.ellipsis,
@@ -616,7 +634,7 @@ class _HomepageState extends State<Homepage>
                                       color: Colors.white,
                                     ),
                                   ),
-                                   Text(
+                                  Text(
                                     '\$${_fetchMostRating[index].item[0].price.toDouble()}',
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -647,7 +665,8 @@ class _HomepageState extends State<Homepage>
             context,
             MaterialPageRoute(
                 builder: (context) => HomeProductList(
-                      chipIndex: index,callback: callback,
+                      chipIndex: index,
+                      callback: callback,
                     )),
           );
           print(index);
@@ -784,11 +803,15 @@ class _HomepageState extends State<Homepage>
           ),
           child: GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) =>  Cart(callback: callback,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Cart(
+                              callback: callback,
+                            )));
               },
               child: Stack(
-                children:   [
+                children: [
                   const Padding(
                     padding: EdgeInsets.only(left: 5),
                     child: Center(
@@ -797,18 +820,23 @@ class _HomepageState extends State<Homepage>
                       color: Colors.blue,
                     )),
                   ),
-                  (numOfCart!=0)?Padding(
-                    padding: const EdgeInsets.only(top: 10,left: 20),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.amber,
-                      child: Text(
-                        numOfCart.toString(),
-                        style: const TextStyle(color: Colors.blue,fontSize: 12,fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      radius: 8,
-                    ),
-                  ):Container(),
+                  (numOfCart != 0)
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 10, left: 20),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.amber,
+                            child: Text(
+                              numOfCart.toString(),
+                              style: const TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            radius: 8,
+                          ),
+                        )
+                      : Container(),
                 ],
               )),
         ),
@@ -896,5 +924,25 @@ class _HomepageState extends State<Homepage>
         ),
       ),
     );
+  }
+  
+  Future<bool> _onBackButtonPressed(BuildContext context) async{
+    bool exitApp = await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Alert'),
+                  content: const Text('Do you want to close the app?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Yes'),
+                    ),
+                  ],
+                ));
+                return exitApp;
   }
 }

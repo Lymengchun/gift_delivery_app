@@ -126,12 +126,13 @@ class _ManageProductState extends State<ManageProduct> {
                                                 ),
                                               ),
                                             ),
+                                            // '\$${allProduct[index].item[0].price.toDouble()}'
                                             Container(
                                               padding: const EdgeInsets.only(
                                                   top: 10),
                                               width: 250,
                                               child: Text(
-                                                '\$${allProduct[index].item[0].price}',
+                                                '\$${allProduct[index].item[0].price.toDouble()}',
                                                 textDirection:
                                                     TextDirection.ltr,
                                                 textAlign: TextAlign.end,

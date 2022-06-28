@@ -12,7 +12,7 @@ const strBelowbt = "You'll receive a 4 degit code to verity next.";
 
 //verify phone screen
 const verifyTitle = "verify phone";
-const verifyDetail = "code is sent to 0964037982";
+const verifyDetail = "code is sent to";
 const strAlert = "Did'n recieve code?";
 const btRequestCode = "Request agian";
 const btVerify = "Verify and Create Account";

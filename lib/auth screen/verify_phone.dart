@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -32,11 +33,14 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   String pinOpt = "";
   FirebaseAuth auth = FirebaseAuth.instance;
   bool ishas = false;
+  int start = 60;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     findPhone();
+     loginWithPhone();
+    
   }
 
   @override
@@ -55,7 +59,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text((pinOpt == "")?userPhone:pinOpt,style:const TextStyle(color: Colors.white),),
+
               const SizedBox(
                 height: 100,
               ),
@@ -72,6 +76,29 @@ class _VerifyPhoneState extends State<VerifyPhone> {
     );
 
     
+  }
+
+  void loginWithPhone() async {
+    startTimer();
+    
+    auth.verifyPhoneNumber(
+      
+      timeout: const Duration(seconds: 60),
+      phoneNumber: "+855" + userPhone,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        
+        await auth.signInWithCredential(credential).then((value) {
+          print("You are logged in successfully");
+        });
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print(e.message);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        verificationID = verificationId;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 
 Widget inputCode() {
@@ -234,9 +261,10 @@ Widget btBottom(context) {
   void verifyOTP() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationID, smsCode: pinOpt);
-
+    
     await auth.signInWithCredential(credential).then(
       (value) {
+        
         setState(() {
           user = FirebaseAuth.instance.currentUser;
         });
@@ -273,6 +301,21 @@ Widget btBottom(context) {
 
 }
 
+void startTimer(){
+  const onsec = Duration(seconds: 1);
+  Timer _timer = Timer.periodic(onsec, (timer) { 
+  if(start == 0){
+    setState(() {
+      timer.cancel(); 
+    });
+  }else{
+    setState(() {
+      start--;
+    });
+  }
+  });
+}
+
 Widget get topTitle {
   return Center(
     child: Column(
@@ -287,7 +330,7 @@ Widget get topTitle {
           textAlign: TextAlign.center,
         ),
         Text(
-          verifyDetail,
+          '$verifyDetail $userPhone',
           style: GoogleFonts.poppins(
               textStyle: const TextStyle(
                   fontSize: 14,
@@ -296,7 +339,26 @@ Widget get topTitle {
           textAlign: TextAlign.center,
         ),
         const SizedBox(
-          height: 100,
+          height: 80,
+        ),
+        RichText(text: TextSpan(
+          children: [
+            TextSpan(
+              text: "Send OTP again in",
+              style: TextStyle(fontSize: 16,color:Colors.amber )
+            ),
+            TextSpan(
+              text: " 00:$start",
+              style: TextStyle(fontSize: 16,color:Colors.redAccent )
+            ),
+            TextSpan(
+              text: " sec",
+              style: TextStyle(fontSize: 16,color:Colors.amber )
+            )
+          ]
+        )),
+         const SizedBox(
+          height: 20,
         ),
       ],
     ),

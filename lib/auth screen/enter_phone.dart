@@ -18,22 +18,21 @@ FirebaseAuth auth = FirebaseAuth.instance;
 TextEditingController phoneController = TextEditingController();
 
 class _EnterPhoneState extends State<EnterPhone> {
-
   @override
   void initState() {
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            color: Colors.black,
-          ),
-         
+    return WillPopScope(
+      onWillPop: () => _onBackButtonPressed(context),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              color: Colors.black,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -45,14 +44,34 @@ class _EnterPhoneState extends State<EnterPhone> {
                 const SizedBox(
                   height: 10,
                 ),
-                btBottom(context,phoneController)
+                btBottom(context, phoneController)
               ],
             ),
-          
-        ],
+          ],
+        ),
       ),
     );
   }
+}
+
+Future<bool> _onBackButtonPressed(BuildContext context) async {
+  bool exitApp = await showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            title: const Text('Alert'),
+            content: const Text('Do you want to close the app?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ));
+  return exitApp;
 }
 
 Widget get topTitle {
@@ -131,9 +150,7 @@ Widget inputPhone(phoneController) {
   );
 }
 
-
-
-Widget btBottom(context,phoneController) {
+Widget btBottom(context, phoneController) {
   return Column(
     children: [
       SizedBox(
@@ -141,12 +158,18 @@ Widget btBottom(context,phoneController) {
         height: 60,
         child: ElevatedButton(
             onPressed: () {
-               loginWithPhone();
-               userPhone = phoneController.text.toString();
-              Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const VerifyPhone()));
+              if (userPhone.isNotEmpty) {
+                userPhone = phoneController.text.toString();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const VerifyPhone()));
+              }else{
+                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text("please fill the phone number!")));
+    
+              }
             },
             child: Text(
               btContinue,
@@ -167,36 +190,19 @@ Widget btBottom(context,phoneController) {
         height: 20,
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 70,),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 70,
+        ),
         child: Text(
-            strBelowbt,
-            style: GoogleFonts.poppins(
-                textStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white38)),
-            textAlign: TextAlign.center,
-          ),
+          strBelowbt,
+          style: GoogleFonts.poppins(
+              textStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white38)),
+          textAlign: TextAlign.center,
+        ),
       ),
     ],
   );
 }
-
-  void loginWithPhone() async {
-    auth.verifyPhoneNumber(
-      timeout: const Duration(seconds: 60),
-      phoneNumber: "+855" + phoneController.text,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((value) {
-          print("You are logged in successfully");
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print(e.message);
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        verificationID = verificationId;
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-  }
