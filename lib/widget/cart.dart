@@ -9,6 +9,7 @@ import 'package:gift_delivery_app/widget/add_address.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:group_button/group_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
   final Function? callback;
@@ -23,22 +24,44 @@ List<ProductModel> _fetchProductCartList = [];
 
 class _CartState extends State<Cart> {
   bool _value = false;
-  int val = -1;
- 
+  int val = 2;
+  DateTime date = DateTime.now();
+  TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+  List<bool> isSelectedStadart = [true,false,false];
+  List<bool> isSelectedMidNight = [true,false,false];
+  double totalPrice = 0.0;
+  String address = 'Add Address';
   @override
   void initState() {
     
     super.initState();
     fetchProductCartList();
+
+
   }
 
   void fetchProductCartList() async {
     final res = await http
         .get(Uri.parse(urlEndpointEmu + "api/fetchProductFromCart/$userId"));
     if (res.statusCode == 200) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+          if(prefs.getString('oldAddress') != null){
+      address = prefs.getString('oldAddress')!;
+    }
       setState(() {
         _fetchProductCartList = productModelFromJson(res.body);
-      
+        totalPrice = 0.0;
+        _fetchProductCartList.forEach((price) {
+            totalPrice += price.item[0].price;
+         });
+         if(val == 1){
+            totalPrice += 5.0;
+         }else if(val == 3){
+            totalPrice += 200.0;
+         }else if(val == 4){
+          totalPrice += 100.0;
+         }
+
       });
       cartAmout = _fetchProductCartList.length;
       widget.callback;
@@ -86,80 +109,112 @@ class _CartState extends State<Cart> {
                   Expanded(child: listCart(context)),
                 ],
               ),
-              bottomNavigationBar: Container(
+              bottomNavigationBar: 
+              Container(
+                color: Colors.white10,
                 height: 70,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.white12,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      flex: 4,
-                      child: Row(
-                        children: [
-                          Radio(
-                              value: null,
-                              groupValue: null,
-                              onChanged: (Null? value) {}),
-                          Text(
-                            selectAll,
-                            style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white)),
-                          ),
-                        ],
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text("Total:  \$${totalPrice.toStringAsFixed(2)}",style: TextStyle(color: Colors.white,fontSize: 18),),
                     ),
                     Flexible(
-                      flex: 2,
-                      child: Row(
-                        children: [
-                          Flexible(
-                            flex: 3,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.black38,
-                              child: Center(
-                                child: Text(
-                                  edit,
-                                  style: GoogleFonts.poppins(
-                                      textStyle: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white)),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ),
-                          ),
-                          // const SizedBox(width: 5,),
-                          Flexible(
-                            flex: 7,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.white30,
-                              child: Center(
-                                child: Text(
-                                  submission,
-                                  style: GoogleFonts.poppins(
-                                      textStyle: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white)),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      flex: 4,
+                      child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          height: 60,
+                          width: 200,
+                          child: ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.green),
+                            onPressed: () {
+                         
+                            },
+                            child: const Text(submission),
+                          )),
                     ),
                   ],
                 ),
               ),
+              // Container(
+              //   height: 70,
+              //   width: MediaQuery.of(context).size.width,
+              //   color: Colors.white12,
+              //   child: Row(
+              //     children: [
+              //       // Flexible(
+              //       //   flex: 4,
+              //       //   child: Row(
+              //       //     children: [
+              //       //       Radio(
+              //       //           value: null,
+              //       //           groupValue: null,
+              //       //           onChanged: (Null? value) {}),
+              //       //       Text(
+              //       //         selectAll,
+              //       //         style: GoogleFonts.poppins(
+              //       //             textStyle: const TextStyle(
+              //       //                 fontSize: 14,
+              //       //                 fontWeight: FontWeight.w500,
+              //       //                 color: Colors.white)),
+              //       //       ),
+              //       //     ],
+              //       //   ),
+              //       // ),
+              //       Flexible(
+              //         flex: 2,
+              //         child: Row(
+              //           children: [
+              //             // Flexible(
+              //             //   flex: 3,
+              //             //   child: Container(
+              //             //     height: MediaQuery.of(context).size.height,
+              //             //     width: MediaQuery.of(context).size.width,
+              //             //     color: Colors.black38,
+              //             //     child: Center(
+              //             //       child: Text(
+              //             //         edit,
+              //             //         style: GoogleFonts.poppins(
+              //             //             textStyle: const TextStyle(
+              //             //                 fontSize: 14,
+              //             //                 fontWeight: FontWeight.w500,
+              //             //                 color: Colors.white)),
+              //             //         textAlign: TextAlign.right,
+              //             //       ),
+              //             //     ),
+              //             //   ),
+              //             // ),
+              //             // const SizedBox(width: 5,),
+              //            SizedBox(
+              //             width: 200,
+              //            ),
+              //             Flexible(
+              //               flex: 7,
+              //               child: Container(
+              //                 height: MediaQuery.of(context).size.height,
+              //                 width: MediaQuery.of(context).size.width,
+              //                 color: Colors.white30,
+              //                 child: Center(
+              //                   child: Text(
+              //                     submission,
+              //                     style: GoogleFonts.poppins(
+              //                         textStyle: const TextStyle(
+              //                             fontSize: 14,
+              //                             fontWeight: FontWeight.w500,
+              //                             color: Colors.white)),
+              //                     textAlign: TextAlign.right,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ),
           ],
         ),
@@ -187,7 +242,7 @@ class _CartState extends State<Cart> {
 
   listCart(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.only(left: 20,right: 20,bottom: 80),
       children: [
         SizedBox(
           height:(_fetchProductCartList.isNotEmpty)?350:200,
@@ -200,22 +255,42 @@ class _CartState extends State<Cart> {
                 child: Center(child: Text(emptyCart,style: TextStyle(color: Colors.white24,fontSize: 30),),),
               ),
         ),
-        const SizedBox(
+        //  Container(
+        //   height: 60,
+        //   padding: EdgeInsets.only(top: 20),
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+              
+        //     ],
+        //   ),
+          
+        // ),
+        SizedBox(
           height: 20,
         ),
         SizedBox(
           height: 40,
           width: 310,
           child: TextFormField(
+            
             readOnly: true,
-            onTap: () {
-              Navigator.push(context,
+            onTap: () async{
+             var result = await Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const AddAdress()));
+             if(result != null){
+                // oldAddress
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.setString('oldAddress',result);
+                setState(() {
+                  address = result;
+                });
+             }
             },
             style: const TextStyle(
               color: Colors.white,
             ),
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
                 prefixIcon: Icon(
                   Icons.pin_drop,
                   color: Colors.white54,
@@ -226,8 +301,8 @@ class _CartState extends State<Cart> {
                 border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
-                hintText:'Nika/Phnom penh/097867464', 
-                // deliveryTo,
+                hintText:address, 
+              
                 hintStyle: TextStyle(
                   color: Colors.white54,
                 )),
@@ -252,20 +327,31 @@ class _CartState extends State<Cart> {
           height: 40,
           width: 310,
           child: TextFormField(
-            onTap: () {},
+            readOnly: true,
+            onTap: ()async{
+              DateTime? newDate = await showDatePicker(context: context,
+              initialDate: date,
+               firstDate: DateTime.now(),
+                lastDate: DateTime(2100));
+              if(newDate == null)return;
+
+              setState(() {
+                date = newDate;
+              });
+            },
             style: const TextStyle(
               color: Colors.white,
             ),
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
                 contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                 fillColor: Colors.white12,
                 filled: true,
                 border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
-                hintText: "16/12/2022",
+                hintText: '${date.day}/${date.month}/${date.year}',
                 hintStyle: TextStyle(
-                  color: Colors.white,
+                  color: Colors.white54,
                 )),
           ),
         ),
@@ -359,11 +445,11 @@ class _CartState extends State<Cart> {
             ),
           ]),
         ),
-        Checkbox(
-            value: true,
-            onChanged: (bool? value) {
-              setState(() {});
-            })
+        // Checkbox(
+        //     value: true,
+        //     onChanged: (bool? value) {
+        //       setState(() {});
+        //     })
       ],
     );
   }
@@ -373,7 +459,7 @@ class _CartState extends State<Cart> {
     children: [
       ListTile(
         title: const Text(
-          "Stadart Delivery5\$",
+          "Stadart Delivery 5\$",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -385,6 +471,7 @@ class _CartState extends State<Cart> {
           onChanged: (value) {
             setState(() {
                val = value as int;
+                fetchProductCartList();
             });
         
           },
@@ -392,6 +479,8 @@ class _CartState extends State<Cart> {
          
         ),
       ),
+      togglebt,
+    
       ListTile(
         title: const Text(
           "Free Delivery free",
@@ -406,6 +495,7 @@ class _CartState extends State<Cart> {
           onChanged: (value) {
             setState(() {
               val = value as int;
+              fetchProductCartList();
             });
           },
          
@@ -413,7 +503,7 @@ class _CartState extends State<Cart> {
       ),
       ListTile(
         title: const Text(
-          "Fixed Time Deliver​y 50\$",
+          "Fixed Time Deliver​y 200\$",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -425,12 +515,14 @@ class _CartState extends State<Cart> {
           onChanged: (value) { 
             setState(() {
               val = value as int;
+              fetchProductCartList();
             });
             
           },
         
         ),
       ),
+      togglebtFixedTime,
       ListTile(
         title: const Text(
           "Mid Night Delivery 100\$",
@@ -446,15 +538,108 @@ class _CartState extends State<Cart> {
             
             setState(() {
               val = value as int;
-
+              fetchProductCartList();
             });
           },
           
         ),
-      )
+      ),
+      togglebtMidNight,
     ],
   );
 }
 
+Widget get togglebt{
+  return   (val == 1)?ToggleButtons(
+    color: Colors.white54,
+    borderColor: Colors.white12,
+  children: <Widget>[
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("7:00 to 11:00 AM"),
+    ),
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("1:00 to 5:00 PM"),
+    ),
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("ALL"),
+    ),
+  ],
+  onPressed: (int index) {
+     
+    setState(() {
+      setState(() {
+      for (int buttonIndex = 0; buttonIndex < isSelectedStadart.length; buttonIndex++) {
+        if (buttonIndex == index) {
+          isSelectedStadart[buttonIndex] = true;
+        } else {
+          isSelectedStadart[buttonIndex] = false;
+        }
+      }
+     
+    });
+    });
+  },
+  isSelected: isSelectedStadart,
+):Container();
+}
+
+Widget get togglebtMidNight{
+  return   (val == 4)?ToggleButtons(
+    color: Colors.white54,
+    borderColor: Colors.white12,
+  children: <Widget>[
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("5:00 to 12:00 PM"),
+    ),
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("12:00 to 5:00 AM"),
+    ),
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("ALL"),
+    ),
+  ],
+  onPressed: (int index) {
+    
+    setState(() {
+      setState(() {
+      for (int buttonIndex = 0; buttonIndex < isSelectedMidNight.length; buttonIndex++) {
+        if (buttonIndex == index) {
+          isSelectedMidNight[buttonIndex] = true;
+        } else {
+          isSelectedMidNight[buttonIndex] = false;
+        }
+      }
+      
+    });
+    });
+  },
+  isSelected: isSelectedMidNight,
+):Container();
+}
+
+Widget get togglebtFixedTime{
+  return   (val == 3)?InkWell(
+    onTap: ()async{
+     
+      showTimePicker(context: context,
+      initialTime: TimeOfDay.now()).then((value) {
+        setState(() {
+          _timeOfDay = value!;
+          
+        });
+      });
+    },
+    child: SizedBox(
+      height: 40,
+      width: 200,
+      child: Card(color: Colors.white12, child: Center(child: Text(_timeOfDay.format(context).toString(),style: TextStyle(color: Colors.white70),)),)),
+  ):Container();
+}
 }
 

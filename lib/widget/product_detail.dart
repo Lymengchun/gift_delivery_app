@@ -175,8 +175,12 @@ class _ProductDetailState extends State<ProductDetail> {
                 color: Colors.white10,
                 height: 70,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text("\$${_allProduct.item[0].price}",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+                    ),
                     Flexible(
                       flex: 4,
                       child: Container(
@@ -273,15 +277,15 @@ class _ProductDetailState extends State<ProductDetail> {
                   textAlign: TextAlign.start,
                 ),
               ),
-              Text(
-                "\$${_allProduct.item[0].price}",
-                style: GoogleFonts.poppins(
-                    textStyle: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white)),
-                textAlign: TextAlign.center,
-              ),
+              // Text(
+              //   "\$${_allProduct.item[0].price}",
+              //   style: GoogleFonts.poppins(
+              //       textStyle: const TextStyle(
+              //           fontSize: 20,
+              //           fontWeight: FontWeight.w500,
+              //           color: Colors.white)),
+              //   textAlign: TextAlign.center,
+              // ),
             ],
           ),
         ),
@@ -468,7 +472,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   },
                 ),
                 Text(
-                  "$_avgStar",
+                  "${_avgStar.toStringAsFixed(2)}",
                   
                   style: GoogleFonts.poppins(
                       textStyle: const TextStyle(

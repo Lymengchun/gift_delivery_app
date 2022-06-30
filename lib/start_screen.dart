@@ -3,7 +3,7 @@ import 'package:gift_delivery_app/auth%20screen/enter_phone.dart';
 import 'package:gift_delivery_app/globalvar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../language/english.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class StartScreen extends StatefulWidget {
   const StartScreen({Key? key}) : super(key: key);

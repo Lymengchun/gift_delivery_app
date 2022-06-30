@@ -40,9 +40,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Gift Delevery',
       theme: ThemeData(
-     
+        
         textTheme: GoogleFonts.latoTextTheme(
           Theme.of(context).textTheme
         ),
