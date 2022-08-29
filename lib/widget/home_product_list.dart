@@ -28,7 +28,7 @@ class _HomeProductListState extends State<HomeProductList> {
   Color chipSelected = Colors.amber;
   int? selectedIndex;
   List<ProductModel> _allProduct = [];
-
+  TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -185,6 +185,17 @@ class _HomeProductListState extends State<HomeProductList> {
     }
   }
 
+   void _searchProduct() async {
+    final res = await http.get(Uri.parse(urlEndpointEmu + "api/searchProduct/${searchController.text}"));
+    if (res.statusCode == 200) {
+      setState(() {
+        _allProduct = productModelFromJson(res.body);
+      });
+      
+    } else {
+      throw Exception('Failed to load Product data.');
+    }
+  }
 
   void _fetchCakesCatagories() async {
     final res = await http.get(Uri.parse(urlEndpointEmu + "api/fetchCakesCatagories"));
@@ -291,6 +302,16 @@ class _HomeProductListState extends State<HomeProductList> {
         width: 300,
         child: Center(
           child: TextFormField(
+            controller: searchController,
+            onTap:(){
+              setState(() {
+                selectedIndex = 5;
+                _getAllProduct();
+              });
+            },
+            onChanged: (searchController){
+              _searchProduct();
+            },
             style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
                 prefixIcon: Icon(

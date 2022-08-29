@@ -903,7 +903,14 @@ class _HomepageState extends State<Homepage>
         child: Center(
           child: TextFormField(
             onTap: () {
-              Navigator.pushNamed(context, '/homeProductList');
+              Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeProductList(
+                      chipIndex: 5,
+                      callback: callback,
+                    )),
+          );
             },
             readOnly: true,
             style: const TextStyle(color: Colors.white),
